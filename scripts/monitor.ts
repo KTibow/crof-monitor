@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
 
 const CROF_URL = 'https://crof.ai/v1/models';
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/models';
@@ -273,5 +274,8 @@ if (changed && process.env.DRY_RUN !== '1') {
   }
 }
 
-if (changed) await writeFile(SNAPSHOT_PATH, snapshot);
+if (changed) {
+  await mkdir(dirname(SNAPSHOT_PATH), { recursive: true });
+  await writeFile(SNAPSHOT_PATH, snapshot);
+}
 console.log(changed ? `Wrote ${SNAPSHOT_PATH}.` : 'Snapshot unchanged.');
