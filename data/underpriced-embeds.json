@@ -64,22 +64,22 @@
       "fields": [
         {
           "name": "Z.ai: GLM 5.1",
-          "value": "**CrofAI**\n$0.45 input, $2.1 output, $0.09 cache read\nWeighted request: $0.013\n\n**aihubmix via models.dev**\n$0.06 input, $0.22 output, $0.013 cache read\nWeighted request: $0.001755 (14% of CrofAI; cache 14%, input 13%, output 10%)",
+          "value": "CrofAI: $0.45 input, $2.1 output, $0.09 cache read\nWeighted request: $0.013\n🆚 aihubmix via models.dev: $0.06 input, $0.22 output, $0.013 cache read\nWeighted request: $0.001755 (14% of CrofAI; cache 14%, input 13%, output 10%)",
           "inline": false
         },
         {
           "name": "MoonshotAI: Kimi K2.5",
-          "value": "**CrofAI**\n$0.35 input, $1.7 output, $0.07 cache read\nWeighted request: $0.01\n\n**hpc-ai via models.dev**\n$0.21 input, $1 output, $0.03 cache read\nWeighted request: $0.0049 (49% of CrofAI; cache 43%, input 60%, output 59%)",
+          "value": "CrofAI: $0.35 input, $1.7 output, $0.07 cache read\nWeighted request: $0.01\n🆚 hpc-ai via models.dev: $0.21 input, $1 output, $0.03 cache read\nWeighted request: $0.0049 (49% of CrofAI; cache 43%, input 60%, output 59%)",
           "inline": false
         },
         {
           "name": "MiniMax: MiniMax M2.5",
-          "value": "**CrofAI**\n$0.11 input, $0.95 output, $0.02 cache read\nWeighted request: $0.0034\n\n**hpc-ai via models.dev**\n$0.14 input, $0.56 output, $0.014 cache read\nWeighted request: $0.00259 (76% of CrofAI; cache 70%, input 127%, output 59%)",
+          "value": "CrofAI: $0.11 input, $0.95 output, $0.02 cache read\nWeighted request: $0.0034\n🆚 hpc-ai via models.dev: $0.14 input, $0.56 output, $0.014 cache read\nWeighted request: $0.00259 (76% of CrofAI; cache 70%, input 127%, output 59%)",
           "inline": false
         },
         {
           "name": "MoonshotAI: Kimi K2.6",
-          "value": "**CrofAI**\n$0.5 input, $1.99 output, $0.1 cache read\nWeighted request: $0.014\n\n**vultr via models.dev**\n$0.15 input, $0.6 output, $0.15 cache read\nWeighted request: $0.016 (112% of CrofAI; cache 150%, input 30%, output 30%)",
+          "value": "CrofAI: $0.5 input, $1.99 output, $0.1 cache read\nWeighted request: $0.014\n🆚 vultr via models.dev: $0.15 input, $0.6 output, $0.15 cache read\nWeighted request: $0.016 (112% of CrofAI; cache 150%, input 30%, output 30%)",
           "inline": false
         }
       ],
