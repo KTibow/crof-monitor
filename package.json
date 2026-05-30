@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "scripts": {
+    "monitor": "node scripts/monitor.ts"
+  },
+  "engines": {
+    "node": ">=26"
+  }
+}

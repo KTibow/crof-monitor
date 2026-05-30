@@ -1,0 +1,28 @@
+name: Monitor pricing
+
+on:
+  schedule:
+    - cron: '17 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26'
+
+      - run: npm run monitor
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: Update pricing monitor snapshot
+          file_pattern: data/underpriced-embeds.json
