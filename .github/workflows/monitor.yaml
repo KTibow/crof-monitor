@@ -2,7 +2,7 @@ name: Monitor pricing
 
 on:
   schedule:
-    - cron: '17 12 * * *'
+    - cron: "17 12 * * *"
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: '26'
+          node-version: "26"
 
       - run: npm run monitor
         env:
@@ -25,4 +25,5 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: Update pricing monitor snapshot
+          commit_author: GitHub Actions <actions@github.com>
           file_pattern: data/underpriced-embeds.json
