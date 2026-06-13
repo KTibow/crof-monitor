@@ -78,7 +78,7 @@ const crofPrices = (crof: CrofModel) => {
 const candidatePrices = (candidate: Candidate) => ({
   input: candidate.input,
   output: candidate.output,
-  cacheRead: candidate.cacheRead || candidate.input,
+  cacheRead: candidate.cacheRead || candidate.input, // we use || because nobody genuinely has free cache reads
   request: requestPrice(
     candidate.input,
     candidate.output,
