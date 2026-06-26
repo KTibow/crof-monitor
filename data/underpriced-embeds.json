@@ -10,7 +10,7 @@
           "inline": false
         },
         {
-          "name": "deepseek via OpenRouter",
+          "name": "StreamLake via OpenRouter",
           "value": "$0.229 input, $0.343 output, $0.023 cache read\nWeighted request: $0.003661 (72% of CrofAI; cache 57%, input 127%, output 98%)",
           "inline": false
         },
