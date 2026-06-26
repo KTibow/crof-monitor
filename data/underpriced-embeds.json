@@ -1,6 +1,30 @@
 {
   "embeds": [
     {
+      "title": "DeepSeek: DeepSeek V3.2 underpriced elsewhere",
+      "color": 15105570,
+      "fields": [
+        {
+          "name": "CrofAI",
+          "value": "$0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505",
+          "inline": false
+        },
+        {
+          "name": "deepseek via OpenRouter",
+          "value": "$0.229 input, $0.343 output, $0.023 cache read\nWeighted request: $0.003661 (72% of CrofAI; cache 57%, input 127%, output 98%)",
+          "inline": false
+        },
+        {
+          "name": "vercel via models.dev",
+          "value": "$0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+      }
+    },
+    {
       "title": "Niche provider underpricers",
       "color": 9807270,
       "fields": [
@@ -17,11 +41,6 @@
         {
           "name": "Qwen: Qwen3.5 397B A17B",
           "value": "CrofAI: $0.35 input, $1.75 output, $0.07 cache read\nWeighted request: $0.01\n🆚 wafer.ai via models.dev: $0.43 input, $2.6 output, $0.04 cache read\nWeighted request: $0.00855 (84% of CrofAI; cache 57%, input 123%, output 149%)",
-          "inline": false
-        },
-        {
-          "name": "DeepSeek: DeepSeek V3.2",
-          "value": "CrofAI: $0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505\n🆚 vercel via models.dev: $0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
           "inline": false
         }
       ],
