@@ -24,6 +24,7 @@ type Candidate = {
   output: number;
   cacheRead?: number;
   source: string;
+  endpointSlug?: string;
 };
 
 type Finding = {
@@ -142,7 +143,7 @@ const openRouterCandidates = (json: { data: Array<any> }): Candidate[] =>
     if (input === undefined || output === undefined) return [];
     return [
       {
-        provider: model.id.split("/")[0] ?? "openrouter",
+        provider: "placeholder",
         id: model.id,
         name: model.name,
         input,
@@ -152,6 +153,7 @@ const openRouterCandidates = (json: { data: Array<any> }): Candidate[] =>
           "openrouter",
         ),
         source: "OpenRouter",
+        endpointSlug: model.canonical_slug ?? model.id,
       },
     ];
   });
@@ -318,6 +320,32 @@ const chunkEmbeds = (embeds: Array<Record<string, unknown>>) => {
   return chunks;
 };
 
+const resolveOpenRouterProvider = async (
+  candidate: Candidate,
+): Promise<string> => {
+  if (!candidate.endpointSlug) return candidate.provider;
+  try {
+    const response = await fetch(
+      `https://openrouter.ai/api/v1/models/${candidate.endpointSlug}/endpoints`,
+    );
+    if (!response.ok) return candidate.provider;
+    const json: any = await response.json();
+    const endpoints: Array<{
+      provider_name?: string;
+      pricing: { prompt?: string };
+    }> = json.data?.endpoints ?? [];
+    if (endpoints.length === 0) return candidate.provider;
+    const sorted = [...endpoints].sort(
+      (a, b) =>
+        Number(a.pricing.prompt ?? Infinity) -
+        Number(b.pricing.prompt ?? Infinity),
+    );
+    return sorted[0].provider_name || candidate.provider;
+  } catch {
+    return candidate.provider;
+  }
+};
+
 const [crofJson, openRouterJson, modelsDevJson] = await Promise.all([
   fetchJson(CROF_URL),
   fetchJson(OPENROUTER_URL),
@@ -343,6 +371,15 @@ const findings = crofModels
       a.crof.id.localeCompare(b.crof.id) ||
       a.candidate.source.localeCompare(b.candidate.source),
   );
+
+// Resolve actual inference providers for OpenRouter candidates
+await Promise.all(
+  findings
+    .filter((f) => f.candidate.source === "OpenRouter")
+    .map(async (f) => {
+      f.candidate.provider = await resolveOpenRouterProvider(f.candidate);
+    }),
+);
 
 const embeds = buildEmbeds(findings);
 const snapshot = `${JSON.stringify({ embeds }, null, 2)}\n`;
