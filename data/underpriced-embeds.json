@@ -11,7 +11,7 @@
         },
         {
           "name": "StreamLake via OpenRouter",
-          "value": "$0.229 input, $0.343 output, $0.023 cache read\nWeighted request: $0.003661 (72% of CrofAI; cache 57%, input 127%, output 98%)",
+          "value": "$0.214 input, $0.322 output, $0.021 cache read\nWeighted request: $0.003432 (68% of CrofAI; cache 54%, input 119%, output 92%)",
           "inline": false
         },
         {
