@@ -25,25 +25,6 @@
       }
     },
     {
-      "title": "Z.ai: GLM 5.2 underpriced elsewhere",
-      "color": 15105570,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.5 input, $2.2 output, $0.08 cache read\nWeighted request: $0.012",
-          "inline": false
-        },
-        {
-          "name": "StreamLake via OpenRouter",
-          "value": "$0.35 input, $1.1 output, $0.065 cache read\nWeighted request: $0.009025 (73% of CrofAI; cache 81%, input 70%, output 50%)",
-          "inline": false
-        }
-      ],
-      "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
-      }
-    },
-    {
       "title": "Niche provider underpricers",
       "color": 9807270,
       "fields": [
