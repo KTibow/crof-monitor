@@ -1,36 +1,17 @@
 {
   "embeds": [
     {
-      "title": "DeepSeek: DeepSeek V3.2 underpriced elsewhere",
-      "color": 15105570,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505",
-          "inline": false
-        },
-        {
-          "name": "StreamLake via OpenRouter",
-          "value": "$0.214 input, $0.322 output, $0.021 cache read\nWeighted request: $0.003432 (68% of CrofAI; cache 54%, input 119%, output 92%)",
-          "inline": false
-        },
-        {
-          "name": "vercel via models.dev",
-          "value": "$0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
-          "inline": false
-        }
-      ],
-      "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
-      }
-    },
-    {
       "title": "Niche provider underpricers",
       "color": 9807270,
       "fields": [
         {
           "name": "Z.ai: GLM 5.1",
           "value": "CrofAI: $0.45 input, $2.15 output, $0.08 cache read\nWeighted request: $0.012\n🆚 aihubmix via models.dev: $0.06 input, $0.22 output, $0.013 cache read\nWeighted request: $0.001755 (15% of CrofAI; cache 16%, input 13%, output 10%)",
+          "inline": false
+        },
+        {
+          "name": "DeepSeek: DeepSeek V3.2",
+          "value": "CrofAI: $0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505\n🆚 vercel via models.dev: $0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
           "inline": false
         }
       ],
