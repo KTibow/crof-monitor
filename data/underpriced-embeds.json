@@ -1,25 +1,6 @@
 {
   "embeds": [
     {
-      "title": "Z.ai: GLM 5.2 underpriced elsewhere",
-      "color": 15844367,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.3 input, $1.05 output, $0.05 cache read\nWeighted request: $0.0073",
-          "inline": false
-        },
-        {
-          "name": "Novita via OpenRouter",
-          "value": "$0.255 input, $0.801 output, $0.047 cache read\nWeighted request: $0.00657 (90% of CrofAI; cache 95%, input 85%, output 76%)",
-          "inline": false
-        }
-      ],
-      "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
-      }
-    },
-    {
       "title": "Niche provider underpricers",
       "color": 9807270,
       "fields": [
