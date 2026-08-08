@@ -1,6 +1,49 @@
 {
   "embeds": [
     {
+      "title": "Google: Gemma 4 31B underpriced elsewhere",
+      "color": 15105570,
+      "fields": [
+        {
+          "name": "CrofAI",
+          "value": "$0.1 input, $0.3 output, $0.02 cache read\nWeighted request: $0.0027",
+          "inline": false
+        },
+        {
+          "name": "kilo via models.dev",
+          "value": "$0.08 input, $0.35 output, $0.01 cache read\nWeighted request: $0.0017 (63% of CrofAI; cache 50%, input 80%, output 117%)",
+          "inline": false
+        },
+        {
+          "name": "llmgateway via models.dev",
+          "value": "$0.102 input, $0.297 output, $0.012 cache read\nWeighted request: $0.001947 (72% of CrofAI; cache 60%, input 102%, output 99%)",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+      }
+    },
+    {
+      "title": "Z.ai: GLM 5.2 underpriced elsewhere",
+      "color": 15844367,
+      "fields": [
+        {
+          "name": "CrofAI",
+          "value": "$0.3 input, $1.05 output, $0.05 cache read\nWeighted request: $0.0073",
+          "inline": false
+        },
+        {
+          "name": "StreamLake via OpenRouter",
+          "value": "$0.252 input, $0.792 output, $0.047 cache read\nWeighted request: $0.006498 (89% of CrofAI; cache 94%, input 84%, output 75%)",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+      }
+    },
+    {
       "title": "Niche provider underpricers",
       "color": 9807270,
       "fields": [
@@ -17,16 +60,6 @@
         {
           "name": "DeepSeek: DeepSeek V4 Flash",
           "value": "CrofAI: $0.12 input, $0.21 output, $0.003 cache read\nWeighted request: $0.001095\n🆚 opencode-go via models.dev: $0.07 input, $0.14 output, $0.0014 cache read\nWeighted request: $0.000623 (57% of CrofAI; cache 47%, input 58%, output 67%)",
-          "inline": false
-        },
-        {
-          "name": "MoonshotAI: Kimi K3",
-          "value": "CrofAI: $2 input, $8 output, $0.25 cache read\nWeighted request: $0.042\n🆚 github-copilot via models.dev: $0.95 input, $4 output, $0.19 cache read\nWeighted request: $0.027 (64% of CrofAI; cache 76%, input 48%, output 50%)",
-          "inline": false
-        },
-        {
-          "name": "Google: Gemma 4 31B",
-          "value": "CrofAI: $0.1 input, $0.3 output, $0.02 cache read\nWeighted request: $0.0027\n🆚 llmgateway via models.dev: $0.102 input, $0.297 output, $0.012 cache read\nWeighted request: $0.001947 (72% of CrofAI; cache 60%, input 102%, output 99%)",
           "inline": false
         },
         {
