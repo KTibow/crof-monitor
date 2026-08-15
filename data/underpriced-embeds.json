@@ -25,6 +25,80 @@
       }
     },
     {
+      "title": "DeepSeek: DeepSeek V4 Pro underpriced elsewhere",
+      "color": 10181046,
+      "fields": [
+        {
+          "name": "CrofAI",
+          "value": "$0.35 input, $0.8 output, $0.01 cache read\nWeighted request: $0.0035",
+          "inline": false
+        },
+        {
+          "name": "nvidia via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "deepseek via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "huggingface via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "auriko via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "alibaba-cn via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "opencode-go via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "vivgrid via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "merge-gateway via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "merge-gateway via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "zenmux via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "edenai via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        },
+        {
+          "name": "llmgateway via models.dev",
+          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+      }
+    },
+    {
       "title": "Niche provider underpricers",
       "color": 9807270,
       "fields": [
