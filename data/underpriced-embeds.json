@@ -25,7 +25,7 @@
       }
     },
     {
-      "title": "DeepSeek: DeepSeek V4 Pro underpriced elsewhere",
+      "title": "DeepSeek: DeepSeek V4 Pro 0813 underpriced elsewhere",
       "color": 10181046,
       "fields": [
         {
@@ -34,63 +34,42 @@
           "inline": false
         },
         {
-          "name": "nvidia via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
-          "inline": false
-        },
-        {
-          "name": "deepseek via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
-          "inline": false
-        },
-        {
-          "name": "huggingface via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
-          "inline": false
-        },
-        {
-          "name": "auriko via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
-          "inline": false
-        },
-        {
-          "name": "alibaba-cn via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
-          "inline": false
-        },
-        {
-          "name": "opencode-go via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
-          "inline": false
-        },
-        {
-          "name": "vivgrid via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
-          "inline": false
-        },
-        {
           "name": "merge-gateway via models.dev",
           "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
           "inline": false
         },
         {
-          "name": "merge-gateway via models.dev",
+          "name": "DeepSeek via OpenRouter",
           "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+      }
+    },
+    {
+      "title": "DeepSeek: DeepSeek V4 Flash underpriced elsewhere",
+      "color": 10181046,
+      "fields": [
+        {
+          "name": "CrofAI",
+          "value": "$0.12 input, $0.21 output, $0.003 cache read\nWeighted request: $0.001095",
           "inline": false
         },
         {
-          "name": "zenmux via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "name": "StreamLake via OpenRouter",
+          "value": "$0.061 input, $0.123 output, $0.012 cache read\nWeighted request: $0.001598 (146% of CrofAI; cache 410%, input 51%, output 59%)",
           "inline": false
         },
         {
-          "name": "edenai via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "name": "placeholder via OpenRouter",
+          "value": "$0.062 input, $0.123 output, $0.012 cache read\nWeighted request: $0.001602 (146% of CrofAI; cache 411%, input 51%, output 59%)",
           "inline": false
         },
         {
-          "name": "llmgateway via models.dev",
-          "value": "$0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
+          "name": "kilo via models.dev",
+          "value": "$0.063 input, $0.126 output, $0.013 cache read\nWeighted request: $0.001638 (150% of CrofAI; cache 420%, input 53%, output 60%)",
           "inline": false
         }
       ],
@@ -110,11 +89,6 @@
         {
           "name": "Qwen: Qwen3.5 397B A17B",
           "value": "CrofAI: $0.35 input, $1.75 output, $0.07 cache read\nWeighted request: $0.01\n🆚 merge-gateway via models.dev: $0.172 input, $1.032 output, $0.034 cache read\nWeighted request: $0.00516 (51% of CrofAI; cache 49%, input 49%, output 59%)",
-          "inline": false
-        },
-        {
-          "name": "DeepSeek: DeepSeek V4 Flash",
-          "value": "CrofAI: $0.12 input, $0.21 output, $0.003 cache read\nWeighted request: $0.001095\n🆚 opencode-go via models.dev: $0.07 input, $0.14 output, $0.0014 cache read\nWeighted request: $0.000623 (57% of CrofAI; cache 47%, input 58%, output 67%)",
           "inline": false
         },
         {
