@@ -10,8 +10,18 @@
           "inline": false
         },
         {
+          "name": "vercel via models.dev",
+          "value": "$0.1 input, $0.4 output, $0.01 cache read\nWeighted request: $0.00185 (20% of CrofAI; cache 17%, input 40%, output 19%)",
+          "inline": false
+        },
+        {
           "name": "runinfra via models.dev",
           "value": "$0.1 input, $0.4 output, $0.01 cache read\nWeighted request: $0.00185 (20% of CrofAI; cache 17%, input 40%, output 19%)",
+          "inline": false
+        },
+        {
+          "name": "nano-gpt via models.dev",
+          "value": "$0.2 input, $1.4 output, $0.04 cache read\nWeighted request: $0.0062 (69% of CrofAI; cache 67%, input 80%, output 67%)",
           "inline": false
         },
         {
