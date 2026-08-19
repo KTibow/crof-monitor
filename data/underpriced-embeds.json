@@ -73,6 +73,11 @@
           "inline": false
         },
         {
+          "name": "DeepSeek: DeepSeek V4 Flash",
+          "value": "CrofAI: $0.12 input, $0.21 output, $0.003 cache read\nWeighted request: $0.001095\n🆚 llmgateway via models.dev: $0.05 input, $0.09 output, $0.0027 cache read\nWeighted request: $0.000597 (54% of CrofAI; cache 90%, input 42%, output 43%)",
+          "inline": false
+        },
+        {
           "name": "MoonshotAI: Kimi K2.6",
           "value": "CrofAI: $0.5 input, $1.99 output, $0.05 cache read\nWeighted request: $0.00924\n🆚 llmgateway via models.dev: $0.22 input, $1.137 output, $0.048 cache read\nWeighted request: $0.006797 (74% of CrofAI; cache 96%, input 44%, output 57%)",
           "inline": false
@@ -80,11 +85,6 @@
         {
           "name": "DeepSeek: DeepSeek V3.2",
           "value": "CrofAI: $0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505\n🆚 vercel via models.dev: $0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
-          "inline": false
-        },
-        {
-          "name": "DeepSeek: DeepSeek V4 Pro 0813",
-          "value": "CrofAI: $0.35 input, $0.8 output, $0.01 cache read\nWeighted request: $0.0035\n🆚 merge-gateway via models.dev: $0.435 input, $0.87 output, $0.003625 cache read\nWeighted request: $0.003389 (97% of CrofAI; cache 36%, input 124%, output 109%)",
           "inline": false
         }
       ],
