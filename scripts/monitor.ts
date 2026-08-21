@@ -134,6 +134,9 @@ const basket = (mix: Mix) => {
   };
 };
 
+// Cost per token of this model's traffic, cache reads counted as tokens like
+// everyone else counts them. The denominator cancels out of every comparison,
+// so it only changes what the number means when it is printed.
 const basketCost = (
   mix: Mix,
   input: number,
@@ -142,9 +145,10 @@ const basketCost = (
 ) => {
   const parts = basket(mix);
   return (
-    parts.uncachedInput * input +
-    parts.cacheReads * cacheRead +
-    parts.output * output
+    (parts.uncachedInput * input +
+      parts.cacheReads * cacheRead +
+      parts.output * output) /
+    (parts.uncachedInput + parts.cacheReads + parts.output)
   );
 };
 
@@ -462,7 +466,6 @@ type Tier1Row = {
   listCacheRead: number;
   listOutput: number;
   discount: number;
-  nonCachedTokens: number;
   annualSaving: number;
   totalTokens: number;
 };
@@ -473,7 +476,6 @@ type Tier1Finding = {
   rows: Tier1Row[];
   annualSaving: number;
   totalTokens: number;
-  nonCachedTokens: number;
   input: number;
   cached: number;
   output: number;
@@ -482,7 +484,6 @@ type Tier1Finding = {
 const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
   const rows: Tier1Row[] = [];
   let totalTokens = 0;
-  let nonCachedTokens = 0;
   let input = 0;
   let cached = 0;
   let output = 0;
@@ -530,7 +531,7 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
     if (thin) {
       setAside.push({
         ...note,
-        reason: `undercuts CrofAI by ${dollars((atCrof - paid) * WEEKS_PER_YEAR)} a year, on ${tokens(provider.nonCachedTokens)} a week — under the volume floor`,
+        reason: `undercuts CrofAI by ${dollars((atCrof - paid) * WEEKS_PER_YEAR)} a year, on ${tokens(split.totalInput + split.output)} a week — under the volume floor`,
         kind: "thin",
         gap: (atCrof - paid) * WEEKS_PER_YEAR,
       });
@@ -560,12 +561,10 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
       listCacheRead: endpoint.cacheRead,
       listOutput: endpoint.output,
       discount: endpoint.discount,
-      nonCachedTokens: provider.nonCachedTokens,
       annualSaving: (atCrof - paid) * WEEKS_PER_YEAR,
       totalTokens: split.totalInput + split.output,
     });
     totalTokens += split.totalInput + split.output;
-    nonCachedTokens += provider.nonCachedTokens;
     input += split.uncachedInput;
     cached += split.cachedInput;
     output += split.output;
@@ -590,7 +589,6 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
     rows,
     annualSaving,
     totalTokens,
-    nonCachedTokens,
     input,
     cached,
     output,
@@ -849,7 +847,7 @@ const tier1Embed = (finding: Tier1Finding) => {
   const name = shortName(crof.name);
   const share = finding.totalTokens / market.marketTotalTokens;
   const crofPrices = triplet(crof.input, crof.cacheRead, crof.output);
-  const volume = `${tokens(finding.nonCachedTokens)} non-cached tokens a week, ${tokens(finding.totalTokens)} in total (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model`;
+  const volume = `${tokens(finding.totalTokens)} tokens a week (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model`;
   const footer = {
     text: `Prices per 1M tokens. Traffic from OpenRouter, week ending ${market.weekEnding}. Annualised from one week.`,
   };
@@ -882,14 +880,14 @@ const tier1Embed = (finding: Tier1Finding) => {
   const cells = shown.map((row) => [
     clip(row.provider, 20),
     `${priceText(row.listInput)} / ${priceText(row.listOutput)}`,
-    tokens(row.nonCachedTokens),
+    tokens(row.totalTokens),
     dollars(row.annualSaving).replace("$", ""),
   ]);
   if (rest.length)
     cells.push([
       `+${rest.length} more`,
       "",
-      tokens(rest.reduce((sum, row) => sum + row.nonCachedTokens, 0)),
+      tokens(rest.reduce((sum, row) => sum + row.totalTokens, 0)),
       dollars(rest.reduce((sum, row) => sum + row.annualSaving, 0)).replace("$", ""),
     ]);
   const table = alignedTable(["provider", "in/out", "tok/wk", "saved/yr"], cells);
@@ -897,7 +895,7 @@ const tier1Embed = (finding: Tier1Finding) => {
   const cacheReads = rows.map((row) => row.listCacheRead);
   const discounted = rows.filter((row) => row.discount > 0).length;
   const prose = [
-    `${tokens(finding.totalTokens)} tokens a week (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model, is on a provider cheaper than CrofAI's ${crofPrices}. Volumes below are non-cached tokens, the portion billed at full rate.`,
+    `${tokens(finding.totalTokens)} tokens a week (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model, is on a provider cheaper than CrofAI's ${crofPrices}.`,
     `Cache reads on these providers run ${priceText(Math.min(...cacheReads))} to ${priceText(Math.max(...cacheReads))}.`,
   ];
   if (discounted)
@@ -923,7 +921,7 @@ const tier2Embed = (finding: Tier2Finding) => {
     : `${finding.provider} is ${pct(finding.gap)} cheaper than CrofAI on ${name}`;
 
   const prose = [
-    `They post ${triplet(finding.input, finding.cacheRead, finding.output)} against CrofAI's ${triplet(finding.crof.input, finding.crof.cacheRead, finding.crof.output)}. On this model's measured traffic mix that works out to ${priceText(finding.theirBasket)} per 1M non-cached tokens against ${priceText(finding.crofBasket)}.`,
+    `They post ${triplet(finding.input, finding.cacheRead, finding.output)} against CrofAI's ${triplet(finding.crof.input, finding.crof.cacheRead, finding.crof.output)}. On this model's measured traffic mix that works out to ${priceText(finding.theirBasket)} per 1M tokens against ${priceText(finding.crofBasket)}.`,
   ];
   // A price this far under what anyone else posts is what an unflagged
   // promotion looks like. Say so rather than dropping the finding: the caveat
