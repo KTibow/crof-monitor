@@ -44,8 +44,37 @@
           "inline": false
         },
         {
+          "name": "llmgateway-providers via models.dev",
+          "value": "$0.102 input, $0.297 output, $0.012 cache read\nWeighted request: $0.001947 (72% of CrofAI; cache 60%, input 102%, output 99%)",
+          "inline": false
+        },
+        {
           "name": "llmgateway via models.dev",
           "value": "$0.102 input, $0.297 output, $0.012 cache read\nWeighted request: $0.001947 (72% of CrofAI; cache 60%, input 102%, output 99%)",
+          "inline": false
+        }
+      ],
+      "footer": {
+        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+      }
+    },
+    {
+      "title": "MoonshotAI: Kimi K2.6 underpriced elsewhere",
+      "color": 15105570,
+      "fields": [
+        {
+          "name": "CrofAI",
+          "value": "$0.5 input, $1.99 output, $0.05 cache read\nWeighted request: $0.00924",
+          "inline": false
+        },
+        {
+          "name": "llmgateway-providers via models.dev",
+          "value": "$0.22 input, $1.137 output, $0.048 cache read\nWeighted request: $0.006797 (74% of CrofAI; cache 96%, input 44%, output 57%)",
+          "inline": false
+        },
+        {
+          "name": "llmgateway via models.dev",
+          "value": "$0.22 input, $1.137 output, $0.048 cache read\nWeighted request: $0.006797 (74% of CrofAI; cache 96%, input 44%, output 57%)",
           "inline": false
         }
       ],
@@ -68,13 +97,13 @@
           "inline": false
         },
         {
-          "name": "MoonshotAI: Kimi K2.6",
-          "value": "CrofAI: $0.5 input, $1.99 output, $0.05 cache read\nWeighted request: $0.00924\n🆚 llmgateway via models.dev: $0.22 input, $1.137 output, $0.048 cache read\nWeighted request: $0.006797 (74% of CrofAI; cache 96%, input 44%, output 57%)",
+          "name": "DeepSeek: DeepSeek V3.2",
+          "value": "CrofAI: $0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505\n🆚 vercel via models.dev: $0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
           "inline": false
         },
         {
-          "name": "DeepSeek: DeepSeek V3.2",
-          "value": "CrofAI: $0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505\n🆚 vercel via models.dev: $0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
+          "name": "MoonshotAI: Kimi K3",
+          "value": "CrofAI: $2 input, $8 output, $0.25 cache read\nWeighted request: $0.042\n🆚 requesty via models.dev: $2.025 input, $10.125 output, $0.203 cache read\nWeighted request: $0.039 (95% of CrofAI; cache 81%, input 101%, output 127%)",
           "inline": false
         }
       ],
