@@ -84,8 +84,31 @@ const mapLimit = async <T, R>(
 
 // ---------------------------------------------------------------- formatting
 
-const priceText = (value: number) =>
-  value >= 0.01 ? value.toFixed(3) : value.toFixed(4);
+// Three significant figures, which separates 0.0797 from 0.0798 and does not
+// pretend 0.0028 is 0.003. Fixed decimals cannot do both: they either invent
+// digits on 0.08 or round 0.0028 away. Alignment is done with spaces, so no
+// trailing zero here is ever there to fill a column.
+const priceText = (value: number) => {
+  if (!(value > 0)) return "0";
+  const figures = Math.max(3, Math.floor(Math.log10(value)) + 1);
+  return value
+    .toPrecision(figures)
+    .replace(/(\.\d*?)0+$/, "$1")
+    .replace(/\.$/, "");
+};
+
+// A column of prices aligned on the decimal point and padded with spaces, so
+// the digits stack up and two rows can be read against each other.
+const alignPrices = (values: number[]) => {
+  const parts = values.map((value) => priceText(value).split("."));
+  const whole = Math.max(...parts.map(([left]) => left.length));
+  const fraction = Math.max(...parts.map(([, right]) => (right ?? "").length));
+  return parts.map(
+    ([left, right]) =>
+      left.padStart(whole) +
+      (fraction ? `.${(right ?? "").padEnd(fraction)}` : ""),
+  );
+};
 
 const triplet = (input: number, cacheRead: number, output: number) =>
   `${priceText(input)} / ${priceText(cacheRead)} / ${priceText(output)}`;
@@ -239,7 +262,6 @@ type Endpoint = {
   input: number;
   cacheRead: number;
   output: number;
-  discount: number;
 };
 
 type ModelMarket = {
@@ -382,9 +404,6 @@ const fetchMarket = async (permaslug: string): Promise<ModelMarket> => {
       input: input * 1e6,
       cacheRead: cacheRead * 1e6,
       output: output * 1e6,
-      discount: endpoint?.pricing?.discount
-        ? finite(endpoint.pricing.discount, `discount for ${tag}`)
-        : 0,
     };
   });
 
@@ -430,7 +449,7 @@ const splitVolume = (provider: ProviderStats, outputShare: number) => {
 // Why a candidate that looked like a finding is not one. Reported only when
 // the run is otherwise clean, ordered so the near-misses come before the
 // listings that were never prices.
-const SET_ASIDE_KINDS = ["thin", "route", "plan", "unpriced"] as const;
+const SET_ASIDE_KINDS = ["thin", "caching", "route", "plan", "unpriced"] as const;
 type SetAside = {
   provider: string;
   model: string;
@@ -465,7 +484,6 @@ type Tier1Row = {
   listInput: number;
   listCacheRead: number;
   listOutput: number;
-  discount: number;
   annualSaving: number;
   totalTokens: number;
 };
@@ -528,6 +546,26 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
         crof.output * split.output) /
       1e6;
     if (atCrof <= paid) continue;
+
+    // Tier 1 asks what this traffic would cost at CrofAI's prices, holding the
+    // workload and its caching behaviour fixed. That premise breaks when a
+    // provider serves almost no cache hits on a model the rest of the market
+    // caches heavily: the shortfall is caching that is not working, not a
+    // workload that cannot be cached, and those users would not carry it to
+    // CrofAI. Pricing their traffic as if they would makes CrofAI's cache rate
+    // irrelevant and reports a caching failure as a price gap.
+    if (
+      market.mix.cacheHitRate >= 0.1 &&
+      provider.cacheHitRate < market.mix.cacheHitRate / 4
+    ) {
+      setAside.push({
+        ...note,
+        reason: `serves ${pct(provider.cacheHitRate)} cache hits where the model runs ${pct(market.mix.cacheHitRate)}, so the gap is a caching failure rather than a price`,
+        kind: "caching",
+        gap: (atCrof - paid) * WEEKS_PER_YEAR,
+      });
+      continue;
+    }
     if (thin) {
       setAside.push({
         ...note,
@@ -560,7 +598,6 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
       listInput: endpoint.input,
       listCacheRead: endpoint.cacheRead,
       listOutput: endpoint.output,
-      discount: endpoint.discount,
       annualSaving: (atCrof - paid) * WEEKS_PER_YEAR,
       totalTokens: split.totalInput + split.output,
     });
@@ -860,10 +897,6 @@ const tier1Embed = (finding: Tier1Finding) => {
       `${row.provider} posts ${triplet(row.listInput, row.listCacheRead, row.listOutput)} against CrofAI's ${crofPrices}.`,
       `On ${volume}, the gap is worth ${dollars(finding.annualSaving)} a year.`,
     ];
-    if (row.discount > 0)
-      prose.push(
-        `${row.provider} flags that price on OpenRouter as a discount off a higher list rate.`,
-      );
     return {
       title: clip(
         `${row.provider} is saving OpenRouter users ${dollars(finding.annualSaving)} a year over CrofAI on ${name}`,
@@ -877,9 +910,12 @@ const tier1Embed = (finding: Tier1Finding) => {
 
   const shown = rows.slice(0, 8);
   const rest = rows.slice(8);
-  const cells = shown.map((row) => [
+  const inputs = alignPrices(shown.map((row) => row.listInput));
+  const cacheReads = alignPrices(shown.map((row) => row.listCacheRead));
+  const outputs = alignPrices(shown.map((row) => row.listOutput));
+  const cells = shown.map((row, index) => [
     clip(row.provider, 20),
-    `${priceText(row.listInput)} / ${priceText(row.listOutput)}`,
+    `${inputs[index]}/${cacheReads[index]}/${outputs[index]}`,
     tokens(row.totalTokens),
     dollars(row.annualSaving).replace("$", ""),
   ]);
@@ -890,18 +926,14 @@ const tier1Embed = (finding: Tier1Finding) => {
       tokens(rest.reduce((sum, row) => sum + row.totalTokens, 0)),
       dollars(rest.reduce((sum, row) => sum + row.annualSaving, 0)).replace("$", ""),
     ]);
-  const table = alignedTable(["provider", "in/out", "tok/wk", "saved/yr"], cells);
+  const table = alignedTable(
+    ["provider", "in/cached/out", "tok/wk", "saved/yr"],
+    cells,
+  );
 
-  const cacheReads = rows.map((row) => row.listCacheRead);
-  const discounted = rows.filter((row) => row.discount > 0).length;
   const prose = [
     `${tokens(finding.totalTokens)} tokens a week (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model, is on a provider cheaper than CrofAI's ${crofPrices}.`,
-    `Cache reads on these providers run ${priceText(Math.min(...cacheReads))} to ${priceText(Math.max(...cacheReads))}.`,
   ];
-  if (discounted)
-    prose.push(
-      `${discounted === rows.length ? `All ${rows.length}` : `${discounted} of the ${rows.length}`} flag their price on OpenRouter as a discount off a higher list rate.`,
-    );
 
   return {
     title: clip(
