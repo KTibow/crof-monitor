@@ -1,172 +1,51 @@
 {
   "embeds": [
     {
-      "title": "Qwen: Qwen3.8 27B underpriced elsewhere",
+      "title": "5 providers on DeepSeek V4 Flash are saving OpenRouter users $241.6K a year over CrofAI",
       "color": 15158332,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.25 input, $2.1 output, $0.06 cache read\nWeighted request: $0.00905",
-          "inline": false
-        },
-        {
-          "name": "runinfra via models.dev",
-          "value": "$0.1 input, $0.4 output, $0.01 cache read\nWeighted request: $0.00185 (20% of CrofAI; cache 17%, input 40%, output 19%)",
-          "inline": false
-        },
-        {
-          "name": "nano-gpt via models.dev",
-          "value": "$0.2 input, $1.4 output, $0.04 cache read\nWeighted request: $0.0062 (69% of CrofAI; cache 67%, input 80%, output 67%)",
-          "inline": false
-        },
-        {
-          "name": "empiriolabs via models.dev",
-          "value": "$0.17 input, $0.5 output, $0.08 cache read\nWeighted request: $0.00895 (99% of CrofAI; cache 133%, input 68%, output 24%)",
-          "inline": false
-        }
-      ],
+      "description": "954B tokens a week (31% input, 63% cached, 6% output), 45% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.120 / 0.0030 / 0.210. Volumes below are non-cached tokens, the portion billed at full rate. Cache reads on these providers run 0.016 to 0.020. 2 of the 5 flag their price on OpenRouter as a discount off a higher list rate.\n```\nprovider              in/out  tok/wk  saved/yr\n----------------------------------------------\nStreamLake     0.080 / 0.159    184B    111.1K\nDigitalOcean   0.068 / 0.168     25B     62.2K\nDeepInfra      0.090 / 0.180     91B     57.4K\nBaidu Qianfan  0.080 / 0.160     40B      5.5K\nSail Research  0.090 / 0.180      9B      5.3K\n```",
       "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-20. Annualised from one week."
       }
     },
     {
-      "title": "Google: Gemma 4 31B underpriced elsewhere",
+      "title": "6 providers on DeepSeek V4 Flash 0731 are saving OpenRouter users $204.5K a year over CrofAI",
+      "color": 15158332,
+      "description": "2.2T tokens a week (19% input, 78% cached, 3% output), 24% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.120 / 0.0030 / 0.210. Volumes below are non-cached tokens, the portion billed at full rate. Cache reads on these providers run 0.014 to 0.028. 2 of the 6 flag their price on OpenRouter as a discount off a higher list rate.\n```\nprovider              in/out  tok/wk  saved/yr\n----------------------------------------------\nStreamLake     0.080 / 0.159    103B     84.6K\nRelace         0.070 / 0.140    293B     63.5K\nOpenInference  0.065 / 0.180      8B     22.2K\nAmbient        0.080 / 0.180     13B     21.1K\nSail Research  0.065 / 0.180      4B      8.1K\nGMICloud       0.084 / 0.168     65B      5.0K\n```",
+      "footer": {
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-20. Annualised from one week."
+      }
+    },
+    {
+      "title": "GMICloud is saving OpenRouter users $1.6K a year over CrofAI on MiMo-V2.5-Pro",
+      "color": 15158332,
+      "description": "GMICloud posts 0.304 / 0.0028 / 0.609 against CrofAI's 0.400 / 0.0030 / 0.800. On 295M non-cached tokens a week, 473M in total (56% input, 38% cached, 6% output), under 1% of measured traffic on this model, the gap is worth $1.6K a year. GMICloud flags that price on OpenRouter as a discount off a higher list rate.",
+      "footer": {
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-20. Annualised from one week."
+      }
+    },
+    {
+      "title": "OpenInference is saving OpenRouter users $1.3K a year over CrofAI on Gemma 4 31B",
+      "color": 15158332,
+      "description": "OpenInference posts 0.080 / 0.010 / 0.350 against CrofAI's 0.100 / 0.020 / 0.300. On 2B non-cached tokens a week, 2B in total (93% input, 0% cached, 7% output), 2% of measured traffic on this model, the gap is worth $1.3K a year.",
+      "footer": {
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-20. Annualised from one week."
+      }
+    },
+    {
+      "title": "gonka24 is 46% cheaper than CrofAI on Kimi K2.6, on 1 of 8 LLM Gateway routes",
       "color": 15105570,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.1 input, $0.3 output, $0.02 cache read\nWeighted request: $0.0027",
-          "inline": false
-        },
-        {
-          "name": "kilo via models.dev",
-          "value": "$0.08 input, $0.35 output, $0.01 cache read\nWeighted request: $0.0017 (63% of CrofAI; cache 50%, input 80%, output 117%)",
-          "inline": false
-        },
-        {
-          "name": "OpenInference via OpenRouter",
-          "value": "$0.08 input, $0.35 output, $0.01 cache read\nWeighted request: $0.0017 (63% of CrofAI; cache 50%, input 80%, output 117%)",
-          "inline": false
-        },
-        {
-          "name": "llmgateway-providers via models.dev",
-          "value": "$0.102 input, $0.297 output, $0.012 cache read\nWeighted request: $0.001947 (72% of CrofAI; cache 60%, input 102%, output 99%)",
-          "inline": false
-        },
-        {
-          "name": "llmgateway via models.dev",
-          "value": "$0.102 input, $0.297 output, $0.012 cache read\nWeighted request: $0.001947 (72% of CrofAI; cache 60%, input 102%, output 99%)",
-          "inline": false
-        },
-        {
-          "name": "Chutes via OpenRouter",
-          "value": "$0.12 input, $0.37 output, $0.012 cache read\nWeighted request: $0.00211 (78% of CrofAI; cache 60%, input 120%, output 123%)",
-          "inline": false
-        }
-      ],
+      "description": "They post 0.220 / 0.048 / 1.137 against CrofAI's 0.500 / 0.050 / 1.990. On this model's measured traffic mix that works out to 0.515 per 1M non-cached tokens against 0.947. The other 7 routes on that gateway are all more expensive than CrofAI. The lab's own route on that gateway is 0.950 / 0.160 / 4.000. gonka24 isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Kimi K2.6 runs 78B tokens a week (26% input, 65% cached, 9% output).",
       "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-20."
       }
     },
     {
-      "title": "DeepSeek: DeepSeek V3.2 underpriced elsewhere",
+      "title": "runinfra is 70% cheaper than CrofAI on Qwen3.8 27B",
       "color": 15105570,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.18 input, $0.35 output, $0.04 cache read\nWeighted request: $0.00505",
-          "inline": false
-        },
-        {
-          "name": "GMICloud via OpenRouter",
-          "value": "$0.209 input, $0.31 output, $0.022 cache read\nWeighted request: $0.003406 (67% of CrofAI; cache 54%, input 116%, output 88%)",
-          "inline": false
-        },
-        {
-          "name": "StreamLake via OpenRouter",
-          "value": "$0.214 input, $0.322 output, $0.021 cache read\nWeighted request: $0.003432 (68% of CrofAI; cache 54%, input 119%, output 92%)",
-          "inline": false
-        },
-        {
-          "name": "vercel via models.dev",
-          "value": "$0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
-          "inline": false
-        },
-        {
-          "name": "Baidu via OpenRouter",
-          "value": "$0.28 input, $0.42 output, $0.028 cache read\nWeighted request: $0.00448 (89% of CrofAI; cache 70%, input 156%, output 120%)",
-          "inline": false
-        }
-      ],
+      "description": "They post 0.100 / 0.010 / 0.400 against CrofAI's 0.250 / 0.060 / 2.100. On this model's measured traffic mix that works out to 0.130 per 1M non-cached tokens against 0.436. That 0.130 is under a third of the 0.650 that Chutes posts, the cheapest for this model on OpenRouter, so treat the gap as provisional rather than a settled rate. runinfra isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.8 27B runs 36B tokens a week (67% input, 26% cached, 7% output).",
       "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
-      }
-    },
-    {
-      "title": "MoonshotAI: Kimi K2.6 underpriced elsewhere",
-      "color": 15105570,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.5 input, $1.99 output, $0.05 cache read\nWeighted request: $0.00924",
-          "inline": false
-        },
-        {
-          "name": "llmgateway-providers via models.dev",
-          "value": "$0.22 input, $1.137 output, $0.048 cache read\nWeighted request: $0.006797 (74% of CrofAI; cache 96%, input 44%, output 57%)",
-          "inline": false
-        },
-        {
-          "name": "llmgateway via models.dev",
-          "value": "$0.22 input, $1.137 output, $0.048 cache read\nWeighted request: $0.006797 (74% of CrofAI; cache 96%, input 44%, output 57%)",
-          "inline": false
-        }
-      ],
-      "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
-      }
-    },
-    {
-      "title": "Xiaomi: MiMo-V2.5-Pro underpriced elsewhere",
-      "color": 15844367,
-      "fields": [
-        {
-          "name": "CrofAI",
-          "value": "$0.4 input, $0.8 output, $0.003 cache read\nWeighted request: $0.003085",
-          "inline": false
-        },
-        {
-          "name": "GMICloud via OpenRouter",
-          "value": "$0.304 input, $0.609 output, $0.0028 cache read\nWeighted request: $0.002397 (78% of CrofAI; cache 93%, input 76%, output 76%)",
-          "inline": false
-        }
-      ],
-      "footer": {
-        "text": "Prices are USD per 1M tokens. Matched by normalized model id/name."
-      }
-    },
-    {
-      "title": "Niche provider underpricers",
-      "color": 9807270,
-      "fields": [
-        {
-          "name": "Z.ai: GLM 5.1",
-          "value": "CrofAI: $0.45 input, $2.15 output, $0.08 cache read\nWeighted request: $0.012\n🆚 aihubmix via models.dev: $0.06 input, $0.22 output, $0.013 cache read\nWeighted request: $0.001755 (15% of CrofAI; cache 16%, input 13%, output 10%)",
-          "inline": false
-        },
-        {
-          "name": "Qwen: Qwen3.5 397B A17B",
-          "value": "CrofAI: $0.35 input, $1.75 output, $0.07 cache read\nWeighted request: $0.01\n🆚 merge-gateway via models.dev: $0.172 input, $1.032 output, $0.034 cache read\nWeighted request: $0.00516 (51% of CrofAI; cache 49%, input 49%, output 59%)",
-          "inline": false
-        },
-        {
-          "name": "MoonshotAI: Kimi K3",
-          "value": "CrofAI: $2 input, $8 output, $0.25 cache read\nWeighted request: $0.042\n🆚 requesty via models.dev: $2.025 input, $10.125 output, $0.203 cache read\nWeighted request: $0.039 (95% of CrofAI; cache 81%, input 101%, output 127%)",
-          "inline": false
-        }
-      ],
-      "footer": {
-        "text": "Single non-OpenRouter matches. Prices are USD per 1M tokens."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-20."
       }
     }
   ]
