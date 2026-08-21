@@ -23,6 +23,11 @@ const OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models";
 const OPENROUTER_PROVIDERS_URL =
   "https://openrouter.ai/api/frontend/v1/all-providers";
 const MODELS_DEV_URL = "https://models.dev/api.json";
+// CrofAI's pricing page embeds the cache hit rate it measures on its own book,
+// per model. It is the only evidence of what CrofAI's caching actually
+// captures, and without it the CrofAI side of every comparison has to borrow
+// the competitor's rate.
+const CROF_PRICING_URL = "https://crof.ai/pricing";
 const SNAPSHOT_PATH = "data/underpriced-embeds.json";
 
 // A provider-model pair below this many non-cached tokens a week is too thin
@@ -202,6 +207,27 @@ const crofCatalog = (json: any): CrofModel[] => {
       `crof completion price for ${model?.id}`,
     ),
   }));
+};
+
+// CrofAI's pricing page carries `allModels = [...]` with a `cache_rate` per
+// model, as a whole-number percent. Zero means unmeasured, not zero.
+const crofCacheRates = (html: string) => {
+  const match = html.match(/allModels\s*=\s*(\[[\s\S]*?\])\s*[;<]/);
+  if (!match) throw new Error("No allModels array on crof.ai/pricing");
+  const models = JSON.parse(match[1]);
+  if (!Array.isArray(models) || models.length === 0)
+    throw new Error("allModels on crof.ai/pricing is empty");
+  const rates = new Map<string, number>();
+  for (const model of models) {
+    const id = require_(model?.id, "crof pricing model id");
+    const rate = model?.cache_rate;
+    if (rate === undefined || rate === null || rate === 0) continue;
+    const parsed = finite(rate, `cache_rate for ${id}`);
+    if (!(parsed > 0 && parsed < 100))
+      throw new Error(`Implausible cache_rate for ${id}: ${parsed}`);
+    rates.set(id, parsed / 100);
+  }
+  return rates;
 };
 
 // ------------------------------------------------------------- model matching
@@ -484,6 +510,9 @@ type Tier1Row = {
   listInput: number;
   listCacheRead: number;
   listOutput: number;
+  providerRate: number;
+  crofRate: number;
+  annualPaid: number;
   annualSaving: number;
   totalTokens: number;
 };
@@ -491,7 +520,9 @@ type Tier1Row = {
 type Tier1Finding = {
   crof: CrofModel;
   market: ModelMarket;
+  crofCacheRate: number | undefined;
   rows: Tier1Row[];
+  annualPaid: number;
   annualSaving: number;
   totalTokens: number;
   input: number;
@@ -499,7 +530,11 @@ type Tier1Finding = {
   output: number;
 };
 
-const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
+const tier1 = (
+  crof: CrofModel,
+  market: ModelMarket,
+  crofCacheRate: number | undefined,
+): Tier1Finding | null => {
   const rows: Tier1Row[] = [];
   let totalTokens = 0;
   let input = 0;
@@ -533,48 +568,33 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
     }
 
     const split = splitVolume(provider, market.mix.outputShare);
-    // What this traffic cost, and what the same traffic — same workload, same
-    // caching behaviour — would cost at CrofAI's list price. One hit rate,
-    // the provider's own, on both sides.
     const paid =
       (provider.effectiveInput * split.totalInput +
         provider.effectiveOutput * split.output) /
       1e6;
+
+    // The same token stream, billed at CrofAI's list. The customer sends the
+    // same prompts either way, so total input tokens carry over; what does not
+    // carry over is how many of them hit cache, because that is the platform's
+    // doing as much as the workload's. Borrowing the competitor's rate is how
+    // a provider that caches badly comes out cheap: it bills CrofAI's full
+    // input price on tokens CrofAI would have served from cache.
+    //
+    // So credit CrofAI the better of what it measurably captures on this model
+    // and what this workload already achieves where it runs. Both are measured.
+    // The max is the conservative direction for an alarm — it can understate a
+    // competitor's advantage, never invent one — and it means CrofAI is never
+    // charged for someone else's caching failure.
+    const crofRate = Math.max(
+      provider.cacheHitRate,
+      crofCacheRate ?? market.mix.cacheHitRate,
+    );
     const atCrof =
-      (crof.input * split.uncachedInput +
-        crof.cacheRead * split.cachedInput +
+      (crof.input * split.totalInput * (1 - crofRate) +
+        crof.cacheRead * split.totalInput * crofRate +
         crof.output * split.output) /
       1e6;
     if (atCrof <= paid) continue;
-
-    // Tier 1 asks what this traffic would cost at CrofAI's prices, holding the
-    // workload and its caching behaviour fixed. That premise breaks when a
-    // provider serves almost no cache hits on a model the rest of the market
-    // caches heavily: the shortfall is caching that is not working, not a
-    // workload that cannot be cached, and those users would not carry it to
-    // CrofAI. Pricing their traffic as if they would makes CrofAI's cache rate
-    // irrelevant and reports a caching failure as a price gap.
-    if (
-      market.mix.cacheHitRate >= 0.1 &&
-      provider.cacheHitRate < market.mix.cacheHitRate / 4
-    ) {
-      setAside.push({
-        ...note,
-        reason: `serves ${pct(provider.cacheHitRate)} cache hits where the model runs ${pct(market.mix.cacheHitRate)}, so the gap is a caching failure rather than a price`,
-        kind: "caching",
-        gap: (atCrof - paid) * WEEKS_PER_YEAR,
-      });
-      continue;
-    }
-    if (thin) {
-      setAside.push({
-        ...note,
-        reason: `undercuts CrofAI by ${dollars((atCrof - paid) * WEEKS_PER_YEAR)} a year, on ${tokens(split.totalInput + split.output)} a week — under the volume floor`,
-        kind: "thin",
-        gap: (atCrof - paid) * WEEKS_PER_YEAR,
-      });
-      continue;
-    }
 
     // A provider can list the same model at several quantizations. Output has
     // no cache blending, so the realized output price identifies which of them
@@ -593,11 +613,53 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
         : best,
     );
 
+    // The comparison above runs at this provider's own cache hit rate, which is
+    // right for what its users paid but says nothing about whether the prices
+    // are cheaper. A provider capturing far fewer cache hits than the model
+    // manages elsewhere wins on any model where CrofAI prices cache reads low,
+    // without posting a lower price for anything. So ask the same question a
+    // second time at the rate the model actually runs at, both sides again on
+    // the one rate, and require the two to agree before calling it a finding.
+    const themAtMarket = basketCost(
+      market.mix,
+      endpoint.input,
+      endpoint.cacheRead,
+      endpoint.output,
+    );
+    const crofAtMarket = basketCost(
+      market.mix,
+      crof.input,
+      crof.cacheRead,
+      crof.output,
+    );
+    if (themAtMarket >= crofAtMarket) {
+      setAside.push({
+        ...note,
+        reason: `is cheaper only at its own ${pct(provider.cacheHitRate)} cache hit rate; at the ${pct(market.mix.cacheHitRate)} this model runs, CrofAI is ${pct(1 - crofAtMarket / themAtMarket)} cheaper`,
+        kind: "caching",
+        gap: (atCrof - paid) * WEEKS_PER_YEAR,
+      });
+      continue;
+    }
+
+    if (thin) {
+      setAside.push({
+        ...note,
+        reason: `undercuts CrofAI by ${dollars((atCrof - paid) * WEEKS_PER_YEAR)} a year, on ${tokens(split.totalInput + split.output)} a week — under the volume floor`,
+        kind: "thin",
+        gap: (atCrof - paid) * WEEKS_PER_YEAR,
+      });
+      continue;
+    }
+
     rows.push({
       provider: provider.name,
       listInput: endpoint.input,
       listCacheRead: endpoint.cacheRead,
       listOutput: endpoint.output,
+      providerRate: provider.cacheHitRate,
+      crofRate,
+      annualPaid: paid * WEEKS_PER_YEAR,
       annualSaving: (atCrof - paid) * WEEKS_PER_YEAR,
       totalTokens: split.totalInput + split.output,
     });
@@ -608,6 +670,7 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
   }
 
   if (rows.length === 0) return null;
+  const annualPaid = rows.reduce((sum, row) => sum + row.annualPaid, 0);
   const annualSaving = rows.reduce((sum, row) => sum + row.annualSaving, 0);
   if (annualSaving < TIER1_ANNUAL_FLOOR) {
     setAside.push({
@@ -623,7 +686,9 @@ const tier1 = (crof: CrofModel, market: ModelMarket): Tier1Finding | null => {
   return {
     crof,
     market,
+    crofCacheRate,
     rows,
+    annualPaid,
     annualSaving,
     totalTokens,
     input,
@@ -884,10 +949,16 @@ const tier1Embed = (finding: Tier1Finding) => {
   const name = shortName(crof.name);
   const share = finding.totalTokens / market.marketTotalTokens;
   const crofPrices = triplet(crof.input, crof.cacheRead, crof.output);
+  // How the CrofAI column was costed. A table's rows can land on either side of
+  // the max, so no single rate describes them; "or better" covers that. This is
+  // provenance rather than the finding, so it rides in the footer with the rest
+  // of the method. The single-provider form has one rate and states it in prose.
+  const basis =
+    finding.crofCacheRate === undefined
+      ? `CrofAI reports no cache rate here, so it is costed optimistically at the model's ${pct(market.mix.cacheHitRate)} or better.`
+      : `CrofAI costed optimistically, at its reported ${pct(finding.crofCacheRate)} cache hits or better.`;
   const volume = `${tokens(finding.totalTokens)} tokens a week (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model`;
-  const footer = {
-    text: `Prices per 1M tokens. Traffic from OpenRouter, week ending ${market.weekEnding}. Annualised from one week.`,
-  };
+  const method = `Prices per 1M tokens. Traffic from OpenRouter, week ending ${market.weekEnding}. Annualised from one week.`;
 
   // One provider does not need a table, and a one-row code block reads as a
   // formatting accident rather than a finding.
@@ -895,7 +966,13 @@ const tier1Embed = (finding: Tier1Finding) => {
     const [row] = rows;
     const prose = [
       `${row.provider} posts ${triplet(row.listInput, row.listCacheRead, row.listOutput)} against CrofAI's ${crofPrices}.`,
-      `On ${volume}, the gap is worth ${dollars(finding.annualSaving)} a year.`,
+      // Whichever side of the max won says how to name the rate: the
+      // provider's own, or CrofAI's book rate standing in for it.
+      `On ${volume}, they bill ${dollars(finding.annualPaid)} a year against the ${dollars(finding.annualPaid + finding.annualSaving)} the same workload would cost on CrofAI ${
+        row.crofRate === row.providerRate
+          ? `with the same ${pct(row.crofRate)} caching`
+          : `with CrofAI's typical ${pct(row.crofRate)} caching`
+      }.`,
     ];
     return {
       title: clip(
@@ -904,7 +981,7 @@ const tier1Embed = (finding: Tier1Finding) => {
       ),
       color: RED,
       description: clip(prose.join(" "), 4096),
-      footer,
+      footer: { text: method },
     };
   }
 
@@ -916,18 +993,20 @@ const tier1Embed = (finding: Tier1Finding) => {
   const cells = shown.map((row, index) => [
     clip(row.provider, 20),
     `${inputs[index]}/${cacheReads[index]}/${outputs[index]}`,
-    tokens(row.totalTokens),
+    dollars(row.annualPaid).replace("$", ""),
     dollars(row.annualSaving).replace("$", ""),
   ]);
   if (rest.length)
     cells.push([
       `+${rest.length} more`,
       "",
-      tokens(rest.reduce((sum, row) => sum + row.totalTokens, 0)),
+      dollars(rest.reduce((sum, row) => sum + row.annualPaid, 0)).replace("$", ""),
       dollars(rest.reduce((sum, row) => sum + row.annualSaving, 0)).replace("$", ""),
     ]);
+  // paid/yr is what these users are billed; add saved/yr to it and you have
+  // what the same workload would cost on CrofAI.
   const table = alignedTable(
-    ["provider", "in/cached/out", "tok/wk", "saved/yr"],
+    ["provider", "in/cached/out", "paid/yr", "saved/yr"],
     cells,
   );
 
@@ -942,7 +1021,7 @@ const tier1Embed = (finding: Tier1Finding) => {
     ),
     color: RED,
     description: clip(`${prose.join(" ")}\n\`\`\`\n${table.join("\n")}\n\`\`\``, 4096),
-    footer,
+    footer: { text: `${method} ${basis}` },
   };
 };
 
@@ -1027,13 +1106,24 @@ const cleanEmbed = () => {
 
 // --------------------------------------------------------------------- run
 
-const [crofJson, openRouterJson, openRouterProvidersJson, modelsDevJson] =
+const fetchText = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok)
+    throw new Error(
+      `Fetch failed for ${url}: ${response.status} ${response.statusText}`,
+    );
+  return response.text();
+};
+
+const [crofJson, crofPricingHtml, openRouterJson, openRouterProvidersJson, modelsDevJson] =
   await Promise.all([
     fetchJson(CROF_URL),
+    fetchText(CROF_PRICING_URL),
     fetchJson(OPENROUTER_MODELS_URL),
     fetchJson(OPENROUTER_PROVIDERS_URL),
     fetchJson(MODELS_DEV_URL),
   ]);
+const crofRates = crofCacheRates(crofPricingHtml);
 
 const crofModels = crofCatalog(crofJson);
 const permaslugs = openRouterPermaslugs(openRouterJson);
@@ -1071,7 +1161,11 @@ const markets = new Map(marketList.map((entry) => [entry.id, entry.market]));
 
 const tier1Findings = matched
   .flatMap(({ model }) => {
-    const finding = tier1(model, markets.get(model.id)!);
+    const finding = tier1(
+      model,
+      markets.get(model.id)!,
+      crofRates.get(model.id),
+    );
     return finding ? [finding] : [];
   })
   .sort((a, b) => b.annualSaving - a.annualSaving);
