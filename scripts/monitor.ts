@@ -143,7 +143,9 @@ const openRouterCandidates = (json: { data: Array<any> }): Candidate[] =>
     if (input === undefined || output === undefined) return [];
     return [
       {
-        provider: "placeholder",
+        // Aggregate pricing is whichever endpoint OpenRouter defaults to, so it
+        // is only a fallback for when the endpoint listing is unavailable.
+        provider: "unlisted endpoint",
         id: model.id,
         name: model.name,
         input,
@@ -320,30 +322,62 @@ const chunkEmbeds = (embeds: Array<Record<string, unknown>>) => {
   return chunks;
 };
 
-const resolveOpenRouterProvider = async (
+// An OpenRouter model is a storefront for many inference providers, each with
+// its own pricing. Comparing against the aggregate hides every provider but
+// whichever one OpenRouter happens to default to, so expand each model into one
+// candidate per provider that actually serves it.
+const expandOpenRouterCandidate = async (
   candidate: Candidate,
-): Promise<string> => {
-  if (!candidate.endpointSlug) return candidate.provider;
+): Promise<Candidate[]> => {
+  if (!candidate.endpointSlug) return [candidate];
+  let endpoints: Array<{
+    provider_name?: string;
+    pricing?: {
+      prompt?: string;
+      completion?: string;
+      input_cache_read?: string;
+    };
+  }> = [];
   try {
     const response = await fetch(
       `https://openrouter.ai/api/v1/models/${candidate.endpointSlug}/endpoints`,
     );
-    if (!response.ok) return candidate.provider;
+    if (!response.ok) return [candidate];
     const json: any = await response.json();
-    const endpoints: Array<{
-      provider_name?: string;
-      pricing: { prompt?: string };
-    }> = json.data?.endpoints ?? [];
-    if (endpoints.length === 0) return candidate.provider;
-    const sorted = [...endpoints].sort(
-      (a, b) =>
-        Number(a.pricing.prompt ?? Infinity) -
-        Number(b.pricing.prompt ?? Infinity),
-    );
-    return sorted[0].provider_name || candidate.provider;
+    endpoints = json.data?.endpoints ?? [];
   } catch {
-    return candidate.provider;
+    return [candidate];
   }
+  if (endpoints.length === 0) return [candidate];
+
+  // A provider can serve the same model at several quantizations; keep whichever
+  // of its endpoints is cheapest so each competitor shows up exactly once.
+  const cheapestPerProvider = new Map<string, Candidate>();
+  for (const endpoint of endpoints) {
+    const input = normalizePrice(endpoint.pricing?.prompt, "openrouter");
+    const output = normalizePrice(endpoint.pricing?.completion, "openrouter");
+    if (input === undefined || output === undefined) continue;
+    const provider = endpoint.provider_name || candidate.provider;
+    const expanded: Candidate = {
+      ...candidate,
+      provider,
+      input,
+      output,
+      cacheRead: normalizePrice(
+        endpoint.pricing?.input_cache_read,
+        "openrouter",
+      ),
+    };
+    const incumbent = cheapestPerProvider.get(provider);
+    if (
+      !incumbent ||
+      candidatePrices(expanded).request < candidatePrices(incumbent).request
+    )
+      cheapestPerProvider.set(provider, expanded);
+  }
+  return cheapestPerProvider.size === 0
+    ? [candidate]
+    : [...cheapestPerProvider.values()];
 };
 
 const [crofJson, openRouterJson, modelsDevJson] = await Promise.all([
@@ -353,8 +387,23 @@ const [crofJson, openRouterJson, modelsDevJson] = await Promise.all([
 ]);
 
 const crofModels = crofJson.data as CrofModel[];
+
+// Only models CrofAI also serves can ever produce a finding, so narrow before
+// expanding — that keeps the endpoint fetches to a couple of dozen requests.
+const openRouterExpanded = (
+  await Promise.all(
+    openRouterCandidates(openRouterJson)
+      .filter(
+        (candidate) =>
+          !isFreeOffering(candidate) &&
+          crofModels.some((crof) => matchesModel(crof, candidate)),
+      )
+      .map(expandOpenRouterCandidate),
+  )
+).flat();
+
 const candidates = [
-  ...openRouterCandidates(openRouterJson),
+  ...openRouterExpanded,
   ...modelsDevCandidates(modelsDevJson),
 ].filter((candidate) => !isFreeOffering(candidate));
 const findings = crofModels
@@ -371,15 +420,6 @@ const findings = crofModels
       a.crof.id.localeCompare(b.crof.id) ||
       a.candidate.source.localeCompare(b.candidate.source),
   );
-
-// Resolve actual inference providers for OpenRouter candidates
-await Promise.all(
-  findings
-    .filter((f) => f.candidate.source === "OpenRouter")
-    .map(async (f) => {
-      f.candidate.provider = await resolveOpenRouterProvider(f.candidate);
-    }),
-);
 
 const embeds = buildEmbeds(findings);
 const snapshot = `${JSON.stringify({ embeds }, null, 2)}\n`;
