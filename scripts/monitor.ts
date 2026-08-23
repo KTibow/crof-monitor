@@ -505,6 +505,10 @@ const isReseller = (providerId: string, modelIds: string[]) => {
 
 // ------------------------------------------------------------------ Tier 1
 
+// Where a workload's dollars go, in weekly dollars; only the shares are ever
+// printed, so the unit never leaves this file.
+type Spend = { uncachedInput: number; cacheReads: number; output: number };
+
 type Tier1Row = {
   provider: string;
   listInput: number;
@@ -528,6 +532,8 @@ type Tier1Finding = {
   input: number;
   cached: number;
   output: number;
+  crofSpend: Spend;
+  theirSpend: Spend;
 };
 
 const tier1 = (
@@ -540,6 +546,8 @@ const tier1 = (
   let input = 0;
   let cached = 0;
   let output = 0;
+  const crofSpend: Spend = { uncachedInput: 0, cacheReads: 0, output: 0 };
+  const theirSpend: Spend = { uncachedInput: 0, cacheReads: 0, output: 0 };
 
   for (const provider of market.providers) {
     // Realized prices on a handful of requests describe one customer, not a
@@ -568,10 +576,9 @@ const tier1 = (
     }
 
     const split = splitVolume(provider, market.mix.outputShare);
-    const paid =
-      (provider.effectiveInput * split.totalInput +
-        provider.effectiveOutput * split.output) /
-      1e6;
+    const inputSpend = (provider.effectiveInput * split.totalInput) / 1e6;
+    const outputSpend = (provider.effectiveOutput * split.output) / 1e6;
+    const paid = inputSpend + outputSpend;
 
     // The same token stream, billed at CrofAI's list. The customer sends the
     // same prompts either way, so total input tokens carry over; what does not
@@ -589,11 +596,13 @@ const tier1 = (
       provider.cacheHitRate,
       crofCacheRate ?? market.mix.cacheHitRate,
     );
+    const crofParts = {
+      uncachedInput: (crof.input * split.totalInput * (1 - crofRate)) / 1e6,
+      cacheReads: (crof.cacheRead * split.totalInput * crofRate) / 1e6,
+      output: (crof.output * split.output) / 1e6,
+    };
     const atCrof =
-      (crof.input * split.totalInput * (1 - crofRate) +
-        crof.cacheRead * split.totalInput * crofRate +
-        crof.output * split.output) /
-      1e6;
+      crofParts.uncachedInput + crofParts.cacheReads + crofParts.output;
     if (atCrof <= paid) continue;
 
     // A provider can list the same model at several quantizations. Output has
@@ -667,6 +676,25 @@ const tier1 = (
     input += split.uncachedInput;
     cached += split.cachedInput;
     output += split.output;
+    // Where the dollars go on each side. CrofAI's side is exact: the parts
+    // that already sum to atCrof. The competitor's side is realized, but the
+    // effective input price is one blend over uncached tokens and cache reads
+    // together, so the blend is allocated between the two in proportion to the
+    // endpoint's list prices at the provider's measured hit rate — the only
+    // split the data supports. A cache-write premium hiding in the blend lands
+    // in the uncached bucket, which is where writes happen.
+    crofSpend.uncachedInput += crofParts.uncachedInput;
+    crofSpend.cacheReads += crofParts.cacheReads;
+    crofSpend.output += crofParts.output;
+    const listUncached = endpoint.input * (1 - provider.cacheHitRate);
+    const listCacheReads = endpoint.cacheRead * provider.cacheHitRate;
+    const uncachedShare =
+      listUncached + listCacheReads > 0
+        ? listUncached / (listUncached + listCacheReads)
+        : 1;
+    theirSpend.uncachedInput += inputSpend * uncachedShare;
+    theirSpend.cacheReads += inputSpend * (1 - uncachedShare);
+    theirSpend.output += outputSpend;
   }
 
   if (rows.length === 0) return null;
@@ -694,6 +722,8 @@ const tier1 = (
     input,
     cached,
     output,
+    crofSpend,
+    theirSpend,
   };
 };
 
@@ -944,6 +974,13 @@ const splitLine = (input: number, cached: number, output: number) => {
   return `${pct(input / total)} input, ${pct(cached / total)} cached, ${pct(output / total)} output`;
 };
 
+// Spend shares in splitLine's order, unlabelled: they always print right after
+// a labelled token split, which carries the labels for both.
+const spendLine = (spend: Spend) => {
+  const total = spend.uncachedInput + spend.cacheReads + spend.output;
+  return `${pct(spend.uncachedInput / total)} / ${pct(spend.cacheReads / total)} / ${pct(spend.output / total)}`;
+};
+
 const tier1Embed = (finding: Tier1Finding) => {
   const { crof, market, rows } = finding;
   const name = shortName(crof.name);
@@ -957,8 +994,13 @@ const tier1Embed = (finding: Tier1Finding) => {
     finding.crofCacheRate === undefined
       ? `CrofAI reports no cache rate here, so it is costed optimistically at the model's ${pct(market.mix.cacheHitRate)} or better.`
       : `CrofAI costed optimistically, at its reported ${pct(finding.crofCacheRate)} cache hits or better.`;
-  const volume = `${tokens(finding.totalTokens)} tokens a week (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model`;
+  const volume = `${tokens(finding.totalTokens)} tokens a week, ${pct(share)} of measured traffic on this model`;
   const method = `Prices per 1M tokens. Traffic from OpenRouter, week ending ${market.weekEnding}. Annualised from one week.`;
+  // Cached tokens are most of this traffic but a sliver of the money on both
+  // sides, so a token split on its own reads as a caching story. The spend
+  // split beside it is what says which prices the dollars actually ride on —
+  // and so which of them moves the headline figure.
+  const info = `ℹ️ That ${tokens(finding.totalTokens)} splits ${splitLine(finding.input, finding.cached, finding.output)}, but spend breaks down ${spendLine(finding.theirSpend)} on OpenRouter vs ${spendLine(finding.crofSpend)} at CrofAI's current prices and caching.`;
 
   // One provider does not need a table, and a one-row code block reads as a
   // formatting accident rather than a finding.
@@ -980,7 +1022,7 @@ const tier1Embed = (finding: Tier1Finding) => {
         256,
       ),
       color: RED,
-      description: clip(prose.join(" "), 4096),
+      description: clip(`${prose.join(" ")}\n${info}`, 4096),
       footer: { text: method },
     };
   }
@@ -1011,7 +1053,7 @@ const tier1Embed = (finding: Tier1Finding) => {
   );
 
   const prose = [
-    `${tokens(finding.totalTokens)} tokens a week (${splitLine(finding.input, finding.cached, finding.output)}), ${pct(share)} of measured traffic on this model, is on a provider cheaper than CrofAI's ${crofPrices}.`,
+    `${volume}, is on a provider cheaper than CrofAI's ${crofPrices}.`,
   ];
 
   return {
@@ -1020,7 +1062,10 @@ const tier1Embed = (finding: Tier1Finding) => {
       256,
     ),
     color: RED,
-    description: clip(`${prose.join(" ")}\n\`\`\`\n${table.join("\n")}\n\`\`\``, 4096),
+    description: clip(
+      `${prose.join(" ")}\n\`\`\`\n${table.join("\n")}\n\`\`\`\n${info}`,
+      4096,
+    ),
     footer: { text: `${method} ${basis}` },
   };
 };
@@ -1051,15 +1096,16 @@ const tier2Embed = (finding: Tier2Finding) => {
   if (finding.labPrice)
     prose.push(`The lab's own route on that gateway is ${triplet(...finding.labPrice)}.`);
 
+  // Volume is context rather than the finding — this provider's own volume is
+  // unknown, which is what makes it Tier 2 — so it rides on an info line
+  // instead of stretching the prose.
   const market = finding.market!;
-  prose.push(
-    `${finding.provider} isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, ${name} runs ${tokens(market.marketTotalTokens)} tokens a week (${splitLine(market.marketInput, market.marketCached, market.marketOutput)}).`,
-  );
+  const info = `ℹ️ ${finding.provider} isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, ${name} runs ${tokens(market.marketTotalTokens)} tokens a week (${splitLine(market.marketInput, market.marketCached, market.marketOutput)}).`;
 
   return {
     title: clip(title, 256),
     color: AMBER,
-    description: clip(prose.join(" "), 4096),
+    description: clip(`${prose.join(" ")}\n${info}`, 4096),
     footer: {
       text: `Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending ${market.weekEnding}.`,
     },
