@@ -1,35 +1,35 @@
 {
   "embeds": [
     {
-      "title": "3 providers on DeepSeek V4 Flash are saving OpenRouter users $368.7K a year over CrofAI",
+      "title": "2 providers on DeepSeek V4 Flash 0731 are saving OpenRouter users $446.5K a year over CrofAI",
       "color": 15158332,
-      "description": "717B tokens a week (27% input, 68% cached, 5% output), 63% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.12 / 0.003 / 0.21.\n```\nprovider             in/cached/out  paid/yr  saved/yr\n-----------------------------------------------------\nBaidu Qianfan  0.049 /0.0098/0.098   496.9K    211.7K\nStreamLake     0.0503/0.0101/0.101   420.3K    146.7K\nGMICloud       0.0588/0.0118/0.118    70.6K     10.3K\n```",
+      "description": "792B tokens a week, 20% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.12 / 0.003 / 0.21.\n```\nprovider        in/cached/out  paid/yr  saved/yr\n------------------------------------------------\nRelace    0.04  /0.008 /0.08    615.7K    437.4K\nDecart    0.0639/0.0128/0.128    93.4K      9.0K\n```\nℹ️ That 792B splits 20% input, 77% cached, 3% output, but spend breaks down 49% / 38% / 13% on OpenRouter vs 71% / 9% / 21% at CrofAI's current prices and caching.",
       "footer": {
-        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-22. Annualised from one week. CrofAI costed optimistically, at its reported 79% cache hits or better."
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-23. Annualised from one week. CrofAI costed optimistically, at its reported 83% cache hits or better."
       }
     },
     {
-      "title": "4 providers on DeepSeek V4 Flash 0731 are saving OpenRouter users $303.3K a year over CrofAI",
+      "title": "3 providers on DeepSeek V4 Flash are saving OpenRouter users $419.1K a year over CrofAI",
       "color": 15158332,
-      "description": "2.2T tokens a week (16% input, 81% cached, 2% output), 57% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.12 / 0.003 / 0.21.\n```\nprovider             in/cached/out  paid/yr  saved/yr\n-----------------------------------------------------\nRelace         0.05  /0.01  /0.1     502.5K    199.5K\nBaidu Qianfan  0.0658/0.0132/0.132     1.5M     69.4K\nStreamLake     0.0657/0.0131/0.131   448.8K     27.6K\nDecart         0.0639/0.0128/0.128   208.8K      6.8K\n```",
+      "description": "617B tokens a week, 53% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.12 / 0.003 / 0.21.\n```\nprovider             in/cached/out  paid/yr  saved/yr\n-----------------------------------------------------\nStreamLake     0.056 /0.0112/0.112   483.5K    294.1K\nGMICloud       0.0588/0.0118/0.118   393.5K    124.8K\nSail Research  0.09  /0.02  /0.18     44.9K       243\n```\nℹ️ That 617B splits 26% input, 70% cached, 5% output, but spend breaks down 53% / 29% / 19% on OpenRouter vs 72% / 5% / 23% at CrofAI's current prices and caching.",
       "footer": {
-        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-22. Annualised from one week. CrofAI costed optimistically, at its reported 82% cache hits or better."
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-23. Annualised from one week. CrofAI costed optimistically, at its reported 66% cache hits or better."
       }
     },
     {
-      "title": "gonka24 is 43% cheaper than CrofAI on Kimi K2.6, on 1 of 8 LLM Gateway routes",
+      "title": "gonka24 is 44% cheaper than CrofAI on Kimi K2.6, on 1 of 8 LLM Gateway routes",
       "color": 15105570,
-      "description": "They post 0.22 / 0.048 / 1.14 against CrofAI's 0.5 / 0.05 / 1.99. On this model's measured traffic mix that works out to 0.169 per 1M tokens against 0.298. The other 7 routes on that gateway are all more expensive than CrofAI. The lab's own route on that gateway is 0.95 / 0.16 / 4. gonka24 isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Kimi K2.6 runs 44B tokens a week (17% input, 77% cached, 5% output).",
+      "description": "They post 0.22 / 0.048 / 1.14 against CrofAI's 0.5 / 0.05 / 1.99. On this model's measured traffic mix that works out to 0.175 per 1M tokens against 0.311. The other 7 routes on that gateway are all more expensive than CrofAI. The lab's own route on that gateway is 0.95 / 0.16 / 4.\nℹ️ gonka24 isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Kimi K2.6 runs 48B tokens a week (17% input, 78% cached, 5% output).",
       "footer": {
-        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-22."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-23."
       }
     },
     {
-      "title": "runinfra is 72% cheaper than CrofAI on Qwen3.8 27B",
+      "title": "runinfra is 71% cheaper than CrofAI on Qwen3.8 27B",
       "color": 15105570,
-      "description": "They post 0.1 / 0.01 / 0.4 against CrofAI's 0.25 / 0.06 / 2.1. On this model's measured traffic mix that works out to 0.0639 per 1M tokens against 0.226. That 0.0639 is under a third of the 0.316 that Chutes posts, the cheapest for this model on OpenRouter, so treat the gap as provisional rather than a settled rate. runinfra isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.8 27B runs 17B tokens a week (30% input, 66% cached, 3% output).",
+      "description": "They post 0.1 / 0.01 / 0.4 against CrofAI's 0.25 / 0.06 / 2.1. On this model's measured traffic mix that works out to 0.0885 per 1M tokens against 0.303. That 0.0885 is under a third of the 0.396 that Chutes posts, the cheapest for this model on OpenRouter, so treat the gap as provisional rather than a settled rate.\nℹ️ runinfra isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.8 27B runs 21B tokens a week (48% input, 47% cached, 5% output).",
       "footer": {
-        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-22."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-23."
       }
     }
   ]
