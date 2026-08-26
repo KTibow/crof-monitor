@@ -475,7 +475,7 @@ const splitVolume = (provider: ProviderStats, outputShare: number) => {
 // Why a candidate that looked like a finding is not one. Reported only when
 // the run is otherwise clean, ordered so the near-misses come before the
 // listings that were never prices.
-const SET_ASIDE_KINDS = ["thin", "caching", "route", "plan", "unpriced"] as const;
+const SET_ASIDE_KINDS = ["thin", "caching", "route", "subsidized", "plan", "unpriced"] as const;
 type SetAside = {
   provider: string;
   model: string;
@@ -491,6 +491,19 @@ const setAside: SetAside[] = [];
 // cheapest such route, so the number is not a price anyone posts. Route-level
 // catalogs (llmgateway-providers) are the exception and are handled per route.
 const RESELLER_NAME = /router|gateway|hub|proxy/;
+// Gonka is a token network, not a seller. Hosts are paid a fixed GNK emission
+// each epoch by Proof of Compute weight, independent of inference revenue, and
+// the per-token price charged on top is a governance-set utilization curve
+// recalculated every block — it opened at zero for 90 epochs and its floor is
+// one nicoin. Across the whole network that comes to roughly $0.002 per 1M
+// tokens: 30.7B tokens in a month for 472 GNK. Nothing there is a price
+// CrofAI can answer by pricing differently.
+//
+// What the catalogs list is a broker's retail markup over that — two orders of
+// magnitude above the network's own rate, set by a dial with no cost under it,
+// and there are dozens of brokers reselling the one pool. Whichever of them get
+// catalogued would each report the same subsidy as a separate finding.
+const SUBSIDIZED_NETWORK = /gonka/;
 const PLAN_CATALOG = /-(coding|token)-plan(-|$)/;
 const PLAN_SKU_PREFIX = /^coding-/;
 
@@ -846,6 +859,16 @@ const tier2Candidates = (
       }
 
       const route = isRouteCatalog ? modelId.split("/")[0] : undefined;
+      const seller = route ?? providerId;
+      if (SUBSIDIZED_NETWORK.test(seller)) {
+        setAside.push({
+          ...note,
+          provider: seller,
+          reason: `subsidized network price, ${pct(gap)} under CrofAI`,
+          kind: "subsidized",
+        });
+        continue;
+      }
       // A route that resells a provider OpenRouter also carries is already
       // priced in real dollars by Tier 1; saying it twice is not two findings.
       if (route && onOpenRouter(route)) continue;
