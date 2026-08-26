@@ -1,35 +1,19 @@
 {
   "embeds": [
     {
-      "title": "2 providers on DeepSeek V4 Flash 0731 are saving OpenRouter users $415.4K a year over CrofAI",
-      "color": 15158332,
-      "description": "796B tokens a week, 17% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.12 / 0.003 / 0.21.\n```\nprovider          in/cached/out  paid/yr  saved/yr\n--------------------------------------------------\nRelace         0.04 /0.008/0.08   647.7K    405.7K\nOpenInference  0.035/0.008/0.1     76.6K      9.7K\n```\nℹ️ That 796B splits 23% input, 74% cached, 3% output, but spend breaks down 52% / 34% / 14% on OpenRouter vs 68% / 9% / 24% at CrofAI's current prices and caching.",
-      "footer": {
-        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-24. Annualised from one week. CrofAI costed optimistically, at its reported 84% cache hits or better."
-      }
-    },
-    {
-      "title": "DeepInfra is saving OpenRouter users $23.1K a year over CrofAI on DeepSeek V4 Flash",
-      "color": 15158332,
-      "description": "DeepInfra posts 0.09 / 0.018 / 0.18 against CrofAI's 0.12 / 0.003 / 0.21. On 207B tokens a week, 16% of measured traffic on this model, they bill $540.9K a year against the $564.0K the same workload would cost on CrofAI with CrofAI's typical 66% caching.\nℹ️ That 207B splits 32% input, 62% cached, 6% output, but spend breaks down 58% / 22% / 20% on OpenRouter vs 74% / 4% / 23% at CrofAI's current prices and caching.",
-      "footer": {
-        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-24. Annualised from one week."
-      }
-    },
-    {
-      "title": "runinfra is 70% cheaper than CrofAI on Qwen3.8 27B",
+      "title": "runinfra is 59% cheaper than CrofAI on Qwen3.8 27B",
       "color": 15105570,
-      "description": "They post 0.1 / 0.01 / 0.4 against CrofAI's 0.25 / 0.06 / 2.1. On this model's measured traffic mix that works out to 0.103 per 1M tokens against 0.347. That 0.103 is under a third of the 0.461 that Chutes posts, the cheapest for this model on OpenRouter, so treat the gap as provisional rather than a settled rate.\nℹ️ runinfra isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.8 27B runs 34B tokens a week (65% input, 29% cached, 7% output).",
+      "description": "They post 0.1 / 0.01 / 0.4 against CrofAI's 0.2 / 0.03 / 1.5. On this model's measured traffic mix that works out to 0.089 per 1M tokens against 0.219. That 0.089 is under a third of the 0.384 that Chutes posts, the cheapest for this model on OpenRouter, so treat the gap as provisional rather than a settled rate.\nℹ️ runinfra isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.8 27B runs 31B tokens a week (62% input, 33% cached, 5% output).",
       "footer": {
-        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-24."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-25."
       }
     },
     {
-      "title": "gonka24 is 46% cheaper than CrofAI on Kimi K2.6, on 1 of 8 LLM Gateway routes",
+      "title": "gonka24 is 44% cheaper than CrofAI on Kimi K2.6, on 1 of 8 LLM Gateway routes",
       "color": 15105570,
-      "description": "They post 0.22 / 0.048 / 1.14 against CrofAI's 0.5 / 0.05 / 1.99. On this model's measured traffic mix that works out to 0.218 per 1M tokens against 0.403. The other 7 routes on that gateway are all more expensive than CrofAI. The lab's own route on that gateway is 0.95 / 0.16 / 4.\nℹ️ gonka24 isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Kimi K2.6 runs 49B tokens a week (29% input, 62% cached, 9% output).",
+      "description": "They post 0.22 / 0.048 / 1.14 against CrofAI's 0.5 / 0.05 / 1.99. On this model's measured traffic mix that works out to 0.155 per 1M tokens against 0.275. The other 7 routes on that gateway are all more expensive than CrofAI. The lab's own route on that gateway is 0.95 / 0.16 / 4.\nℹ️ gonka24 isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Kimi K2.6 runs 41B tokens a week (19% input, 76% cached, 5% output).",
       "footer": {
-        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-24."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-25."
       }
     }
   ]
