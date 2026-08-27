@@ -322,7 +322,7 @@ const fetchMarket = async (permaslug: string): Promise<ModelMarket> => {
   // model released this week has fewer, and the split below is a ratio, so a
   // short window still answers the only question asked of it.
   const week = analytics.slice(1, 8);
-  if (week.length < 3)
+  if (week.length < 1)
     throw new Error(
       `model-activity for ${permaslug} has ${week.length} complete days`,
     );
