@@ -1,19 +1,35 @@
 {
   "embeds": [
     {
-      "title": "runinfra is 59% cheaper than CrofAI on Qwen3.8 27B",
-      "color": 15105570,
-      "description": "They post 0.1 / 0.01 / 0.4 against CrofAI's 0.2 / 0.03 / 1.5. On this model's measured traffic mix that works out to 0.089 per 1M tokens against 0.219. That 0.089 is under a third of the 0.384 that Chutes posts, the cheapest for this model on OpenRouter, so treat the gap as provisional rather than a settled rate.\nℹ️ runinfra isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.8 27B runs 31B tokens a week (62% input, 33% cached, 5% output).",
+      "title": "OpenInference is saving OpenRouter users $58.2K a year over CrofAI on DeepSeek V4 Flash 0731",
+      "color": 15158332,
+      "description": "OpenInference posts 0.03 / 0.007 / 0.1 against CrofAI's 0.08 / 0.003 / 0.1. On 111B tokens a week, 1% of measured traffic on this model, they bill $113.5K a year against the $171.8K the same workload would cost on CrofAI with CrofAI's typical 71% caching.\nℹ️ That 111B splits 32% input, 62% cached, 6% output, but spend breaks down 49% / 22% / 29% on OpenRouter vs 73% / 7% / 20% at CrofAI's current prices and caching.",
       "footer": {
-        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-25."
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-26. Annualised from one week."
       }
     },
     {
-      "title": "gonka24 is 44% cheaper than CrofAI on Kimi K2.6, on 1 of 8 LLM Gateway routes",
-      "color": 15105570,
-      "description": "They post 0.22 / 0.048 / 1.14 against CrofAI's 0.5 / 0.05 / 1.99. On this model's measured traffic mix that works out to 0.155 per 1M tokens against 0.275. The other 7 routes on that gateway are all more expensive than CrofAI. The lab's own route on that gateway is 0.95 / 0.16 / 4.\nℹ️ gonka24 isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Kimi K2.6 runs 41B tokens a week (19% input, 76% cached, 5% output).",
+      "title": "2 providers on DeepSeek V4 Flash are saving OpenRouter users $25.3K a year over CrofAI",
+      "color": 15158332,
+      "description": "721B tokens a week, 38% of measured traffic on this model, is on a provider cheaper than CrofAI's 0.12 / 0.003 / 0.21.\n```\nprovider             in/cached/out  paid/yr  saved/yr\n-----------------------------------------------------\nBaidu Qianfan  0.0794/0.0159/0.159   195.6K     15.9K\nStreamLake     0.078 /0.0156/0.156     1.1M      9.4K\n```\nℹ️ That 721B splits 21% input, 75% cached, 4% output, but spend breaks down 48% / 35% / 17% on OpenRouter vs 72% / 6% / 22% at CrofAI's current prices and caching.",
       "footer": {
-        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-25."
+        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-26. Annualised from one week. CrofAI costed optimistically, at its reported 73% cache hits or better."
+      }
+    },
+    {
+      "title": "runinfra is 60% cheaper than CrofAI on Qwen3.8 27B",
+      "color": 15105570,
+      "description": "They post 0.1 / 0.01 / 0.4 against CrofAI's 0.2 / 0.03 / 1.5. On this model's measured traffic mix that works out to 0.0672 per 1M tokens against 0.167. That 0.0672 is under a third of the 0.288 that Chutes posts, the cheapest for this model on OpenRouter, so treat the gap as provisional rather than a settled rate.\nℹ️ runinfra isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.8 27B runs 56B tokens a week (30% input, 68% cached, 2% output).",
+      "footer": {
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-26."
+      }
+    },
+    {
+      "title": "alibaba-cn is 42% cheaper than CrofAI on Qwen3.5 397B A17B",
+      "color": 15105570,
+      "description": "They post 0.172 / 0.172 / 1.03 against CrofAI's 0.35 / 0.07 / 1.75. On this model's measured traffic mix that works out to 0.248 per 1M tokens against 0.425.\nℹ️ alibaba-cn isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.5 397B A17B runs 3B tokens a week (66% input, 26% cached, 8% output).",
+      "footer": {
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-26."
       }
     }
   ]
