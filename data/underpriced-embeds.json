@@ -1,19 +1,11 @@
 {
   "embeds": [
     {
-      "title": "Baidu Qianfan is saving OpenRouter users $17.6K a year over CrofAI on DeepSeek V4 Flash",
-      "color": 15158332,
-      "description": "Baidu Qianfan posts 0.0791 / 0.0158 / 0.158 against CrofAI's 0.12 / 0.003 / 0.21. On 420B tokens a week, 28% of measured traffic on this model, they bill $768.4K a year against the $785.9K the same workload would cost on CrofAI with the same 77% caching.\nℹ️ That 420B splits 22% input, 75% cached, 4% output, but spend breaks down 50% / 34% / 16% on OpenRouter vs 73% / 6% / 21% at CrofAI's current prices and caching.",
+      "title": "alibaba-cn is 33% cheaper than CrofAI on Qwen3.5 397B A17B",
+      "color": 15105570,
+      "description": "They post 0.172 / 0.172 / 1.03 against CrofAI's 0.35 / 0.07 / 1.75. On this model's measured traffic mix that works out to 0.289 per 1M tokens against 0.429.\nℹ️ alibaba-cn isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.5 397B A17B runs 8B tokens a week (39% input, 50% cached, 11% output).",
       "footer": {
-        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-29. Annualised from one week."
-      }
-    },
-    {
-      "title": "Relace is saving OpenRouter users $3.3K a year over CrofAI on GLM 5.3 Flash",
-      "color": 15158332,
-      "description": "Relace posts 0.05 / 0.01 / 0.167 against CrofAI's 0.07 / 0.01 / 0.22. On 177B tokens a week, 3% of measured traffic on this model, they bill $271.0K a year against the $274.2K the same workload would cost on CrofAI with CrofAI's typical 84% caching.\nℹ️ That 177B splits 17% input, 78% cached, 5% output, but spend breaks down 34% / 32% / 34% on OpenRouter vs 36% / 27% / 37% at CrofAI's current prices and caching.",
-      "footer": {
-        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-08-29. Annualised from one week."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-30."
       }
     }
   ]
