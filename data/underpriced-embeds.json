@@ -1,11 +1,11 @@
 {
   "embeds": [
     {
-      "title": "alibaba-cn is 43% cheaper than CrofAI on Qwen3.5 397B A17B",
+      "title": "alibaba-cn is 41% cheaper than CrofAI on Qwen3.5 397B A17B",
       "color": 15105570,
-      "description": "They post 0.172 / 0.172 / 1.03 against CrofAI's 0.35 / 0.07 / 1.75. On this model's measured traffic mix that works out to 0.36 per 1M tokens against 0.63.\nℹ️ alibaba-cn isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.5 397B A17B runs 8B tokens a week (66% input, 13% cached, 21% output).",
+      "description": "They post 0.172 / 0.172 / 1.03 against CrofAI's 0.35 / 0.07 / 1.75. On this model's measured traffic mix that works out to 0.329 per 1M tokens against 0.554.\nℹ️ alibaba-cn isn't on OpenRouter, so we don't know their volume. Across all of OpenRouter, Qwen3.5 397B A17B runs 3B tokens a week (60% input, 23% cached, 17% output).",
       "footer": {
-        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-08-31."
+        "text": "Prices per 1M tokens. Listing from models.dev, volume from OpenRouter, week ending 2026-09-01."
       }
     }
   ]
