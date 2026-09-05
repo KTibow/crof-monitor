@@ -23,11 +23,12 @@ const OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models";
 const OPENROUTER_PROVIDERS_URL =
   "https://openrouter.ai/api/frontend/v1/all-providers";
 const MODELS_DEV_URL = "https://models.dev/api.json";
-// CrofAI's pricing page embeds the cache hit rate it measures on its own book,
+// CrofAI's pricing page carries the cache hit rate it measures on its own book,
 // per model. It is the only evidence of what CrofAI's caching actually
 // captures, and without it the CrofAI side of every comparison has to borrow
-// the competitor's rate.
-const CROF_PRICING_URL = "https://crof.ai/pricing";
+// the competitor's rate. The page fetches this itself and renders it client
+// side, so read the same endpoint rather than the HTML around it.
+const CROF_PRICING_URL = "https://crof.ai/api/page-data/pricing";
 const SNAPSHOT_PATH = "data/underpriced-embeds.json";
 
 // A provider-model pair below this many non-cached tokens a week is too thin
@@ -209,14 +210,12 @@ const crofCatalog = (json: any): CrofModel[] => {
   }));
 };
 
-// CrofAI's pricing page carries `allModels = [...]` with a `cache_rate` per
-// model, as a whole-number percent. Zero means unmeasured, not zero.
-const crofCacheRates = (html: string) => {
-  const match = html.match(/allModels\s*=\s*(\[[\s\S]*?\])\s*[;<]/);
-  if (!match) throw new Error("No allModels array on crof.ai/pricing");
-  const models = JSON.parse(match[1]);
+// The pricing page data carries a `cache_rate` per model, as a whole-number
+// percent. Zero means unmeasured, not zero.
+const crofCacheRates = (json: any) => {
+  const models = json?.models;
   if (!Array.isArray(models) || models.length === 0)
-    throw new Error("allModels on crof.ai/pricing is empty");
+    throw new Error("No models in crof.ai pricing page data");
   const rates = new Map<string, number>();
   for (const model of models) {
     const id = require_(model?.id, "crof pricing model id");
@@ -1175,24 +1174,15 @@ const cleanEmbed = () => {
 
 // --------------------------------------------------------------------- run
 
-const fetchText = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok)
-    throw new Error(
-      `Fetch failed for ${url}: ${response.status} ${response.statusText}`,
-    );
-  return response.text();
-};
-
-const [crofJson, crofPricingHtml, openRouterJson, openRouterProvidersJson, modelsDevJson] =
+const [crofJson, crofPricingJson, openRouterJson, openRouterProvidersJson, modelsDevJson] =
   await Promise.all([
     fetchJson(CROF_URL),
-    fetchText(CROF_PRICING_URL),
+    fetchJson(CROF_PRICING_URL),
     fetchJson(OPENROUTER_MODELS_URL),
     fetchJson(OPENROUTER_PROVIDERS_URL),
     fetchJson(MODELS_DEV_URL),
   ]);
-const crofRates = crofCacheRates(crofPricingHtml);
+const crofRates = crofCacheRates(crofPricingJson);
 
 const crofModels = crofCatalog(crofJson);
 const permaslugs = openRouterPermaslugs(openRouterJson);
