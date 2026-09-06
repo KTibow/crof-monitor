@@ -1134,6 +1134,8 @@ const tier2Embed = (finding: Tier2Finding) => {
   };
 };
 
+const CLEAN_TITLE = "Nothing is undercutting CrofAI";
+
 const cleanEmbed = () => {
   // One line per provider and reason, however many models it covered.
   const grouped = new Map<string, SetAside & { models: string[] }>();
@@ -1161,7 +1163,7 @@ const cleanEmbed = () => {
   if (notes.length > shown.length)
     shown.push(`And ${notes.length - shown.length} more.`);
   return {
-    title: "Nothing is undercutting CrofAI",
+    title: CLEAN_TITLE,
     color: GREEN,
     description: clip(
       shown.length
@@ -1274,12 +1276,45 @@ console.error(
   ].join("\n"),
 );
 
-const snapshot = `${JSON.stringify({ embeds }, null, 2)}\n`;
+// A clean report says one thing: nobody is undercutting CrofAI. Its set-aside
+// notes carry percentages, dollar figures and token counts that drift every day
+// without changing that verdict, and reordering the notes as gaps move drifts
+// which six get shown — so the prose is not what decides whether to post again.
+// What decides it is which providers were set aside, on which models, for which
+// reason. That list is recorded next to the embeds so the next run can compare
+// against it. Findings reports still compare verbatim, because there the
+// numbers are the finding.
+const clean = embeds.length === 1 && embeds[0].title === CLEAN_TITLE;
+const setAsideKey = clean
+  ? [
+      ...new Set(
+        setAside.map((item) => `${item.kind}|${item.provider}|${item.model}`),
+      ),
+    ].sort()
+  : undefined;
+
+// undefined drops out of the JSON, so a findings snapshot keeps its old shape.
+const snapshot = `${JSON.stringify({ setAside: setAsideKey, embeds }, null, 2)}\n`;
 const previous = await readFile(SNAPSHOT_PATH, "utf8").catch(() => "");
 const changed = snapshot !== previous;
+const previousSetAside = (() => {
+  try {
+    return JSON.parse(previous)?.setAside;
+  } catch {
+    return undefined;
+  }
+})();
+// Two clean runs compare by that list; anything else — a findings report on
+// either side, or a snapshot written before the list existed — compares raw.
+// The snapshot is still rewritten with today's numbers when nothing is posted,
+// so the committed file stays an accurate picture of the last run.
+const worthPosting =
+  setAsideKey && Array.isArray(previousSetAside)
+    ? JSON.stringify(setAsideKey) !== JSON.stringify(previousSetAside)
+    : changed;
 console.log(snapshot);
 
-if (changed && process.env.DRY_RUN !== "1") {
+if (worthPosting && process.env.DRY_RUN !== "1") {
   const webhook = require_(
     process.env.DISCORD_WEBHOOK_URL,
     "DISCORD_WEBHOOK_URL",
@@ -1300,3 +1335,12 @@ if (changed) {
   await writeFile(SNAPSHOT_PATH, snapshot);
 }
 console.error(changed ? `Wrote ${SNAPSHOT_PATH}.` : "Snapshot unchanged.");
+console.error(
+  worthPosting
+    ? process.env.DRY_RUN === "1"
+      ? "Would post to Discord."
+      : "Posted to Discord."
+    : changed
+      ? "Same report, only numbers moved; not posted."
+      : "Nothing new to post.",
+);

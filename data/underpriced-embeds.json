@@ -1,4 +1,12 @@
 {
+  "setAside": [
+    "route|merge-gateway|GLM 5.3 Flash",
+    "subsidized|gonka24|Kimi K2.6",
+    "unpriced|ovhcloud|Qwen3.8 27B",
+    "unpriced|requesty|Gemma 4 31B",
+    "unpriced|unorouter|GLM 5.2",
+    "unpriced|unorouter|Gemma 4 31B"
+  ],
   "embeds": [
     {
       "title": "Nothing is undercutting CrofAI",
