@@ -2,6 +2,8 @@
   "setAside": [
     "route|merge-gateway|GLM 5.3 Flash",
     "subsidized|gonka24|Kimi K2.6",
+    "unpriced|Phala|Kimi K2.6",
+    "unpriced|Together|Kimi K2.7 Code",
     "unpriced|ovhcloud|Qwen3.8 27B",
     "unpriced|requesty|Gemma 4 31B",
     "unpriced|unorouter|GLM 5.2",
@@ -11,7 +13,7 @@
     {
       "title": "Nothing is undercutting CrofAI",
       "color": 3066993,
-      "description": "Set aside: merge-gateway on GLM 5.3 Flash, resold route flattened to one price, 76% under CrofAI. gonka24 on Kimi K2.6, subsidized network price, 45% under CrofAI. unorouter on Gemma 4 31B and GLM 5.2, listed at $0, not purchasable per token. requesty on Gemma 4 31B, listed at $0, not purchasable per token. ovhcloud on Qwen3.8 27B, listed at $0, not purchasable per token."
+      "description": "Set aside: merge-gateway on GLM 5.3 Flash, resold route flattened to one price, 76% under CrofAI. gonka24 on Kimi K2.6, subsidized network price, 45% under CrofAI. unorouter on Gemma 4 31B and GLM 5.2, listed at $0, not purchasable per token. requesty on Gemma 4 31B, listed at $0, not purchasable per token. ovhcloud on Qwen3.8 27B, listed at $0, not purchasable per token. Together on Kimi K2.7 Code, reports a zero effective price, on 0M a week. And 1 more."
     }
   ]
 }
