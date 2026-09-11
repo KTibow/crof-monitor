@@ -1,7 +1,6 @@
 {
   "setAside": [
     "route|merge-gateway|GLM 5.3 Flash",
-    "unpriced|Cerebras|Gemma 4 31B",
     "unpriced|bothub|Gemma 4 31B",
     "unpriced|ovhcloud|Qwen3.8 27B",
     "unpriced|requesty|Gemma 4 31B",
@@ -12,7 +11,7 @@
     {
       "title": "Nothing is undercutting CrofAI",
       "color": 3066993,
-      "description": "Set aside: merge-gateway on GLM 5.3 Flash, resold route flattened to one price, 76% under CrofAI. bothub on Gemma 4 31B, listed at $0, not purchasable per token. unorouter on Gemma 4 31B and GLM 5.2, listed at $0, not purchasable per token. requesty on Gemma 4 31B, listed at $0, not purchasable per token. ovhcloud on Qwen3.8 27B, listed at $0, not purchasable per token. Cerebras on Gemma 4 31B, reports a zero effective price, on 0M a week."
+      "description": "Set aside: merge-gateway on GLM 5.3 Flash, resold route flattened to one price, 76% under CrofAI. bothub on Gemma 4 31B, listed at $0, not purchasable per token. unorouter on Gemma 4 31B and GLM 5.2, listed at $0, not purchasable per token. requesty on Gemma 4 31B, listed at $0, not purchasable per token. ovhcloud on Qwen3.8 27B, listed at $0, not purchasable per token."
     }
   ]
 }
