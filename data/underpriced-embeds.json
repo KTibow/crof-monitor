@@ -1,5 +1,6 @@
 {
   "setAside": [
+    "caching|StreamLake|DeepSeek V4 Flash 0731",
     "route|merge-gateway|GLM 5.3 Flash",
     "unpriced|bothub|Gemma 4 31B",
     "unpriced|ovhcloud|Qwen3.8 27B",
@@ -11,7 +12,7 @@
     {
       "title": "Nothing is undercutting CrofAI",
       "color": 3066993,
-      "description": "Set aside: merge-gateway on GLM 5.3 Flash, resold route flattened to one price, 76% under CrofAI. bothub on Gemma 4 31B, listed at $0, not purchasable per token. unorouter on Gemma 4 31B and GLM 5.2, listed at $0, not purchasable per token. requesty on Gemma 4 31B, listed at $0, not purchasable per token. ovhcloud on Qwen3.8 27B, listed at $0, not purchasable per token."
+      "description": "Set aside: StreamLake on DeepSeek V4 Flash 0731, is cheaper only at its own 86% cache hit rate; at the 80% this model runs, CrofAI is 1% cheaper. merge-gateway on GLM 5.3 Flash, resold route flattened to one price, 76% under CrofAI. bothub on Gemma 4 31B, listed at $0, not purchasable per token. unorouter on Gemma 4 31B and GLM 5.2, listed at $0, not purchasable per token. requesty on Gemma 4 31B, listed at $0, not purchasable per token. ovhcloud on Qwen3.8 27B, listed at $0, not purchasable per token."
     }
   ]
 }
