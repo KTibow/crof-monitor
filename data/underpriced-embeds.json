@@ -1,12 +1,18 @@
 {
+  "setAside": [
+    "route|merge-gateway|GLM 5.3 Flash",
+    "unpriced|amd|Qwen3.8 27B",
+    "unpriced|bothub|Gemma 4 31B",
+    "unpriced|ovhcloud|Qwen3.8 27B",
+    "unpriced|requesty|Gemma 4 31B",
+    "unpriced|unorouter|GLM 5.2",
+    "unpriced|unorouter|Gemma 4 31B"
+  ],
   "embeds": [
     {
-      "title": "Baidu Qianfan is saving OpenRouter users $147.6K a year over CrofAI on DeepSeek V4 Flash 0731",
-      "color": 15158332,
-      "description": "Baidu Qianfan posts 0.0352 / 0.00112 / 0.106 against CrofAI's 0.07 / 0.003 / 0.1. On 722B tokens a week, 11% of measured traffic on this model, they bill $387.4K a year against the $535.0K the same workload would cost on CrofAI with CrofAI's typical 87% caching.\nℹ️ That 722B splits 18% input, 79% cached, 3% output, but spend breaks down 62% / 9% / 30% on OpenRouter vs 62% / 18% / 20% at CrofAI's current prices and caching.",
-      "footer": {
-        "text": "Prices per 1M tokens. Traffic from OpenRouter, week ending 2026-09-12. Annualised from one week."
-      }
+      "title": "Nothing is undercutting CrofAI",
+      "color": 3066993,
+      "description": "Set aside: merge-gateway on GLM 5.3 Flash, resold route flattened to one price, 76% under CrofAI. bothub on Gemma 4 31B, listed at $0, not purchasable per token. unorouter on Gemma 4 31B and GLM 5.2, listed at $0, not purchasable per token. requesty on Gemma 4 31B, listed at $0, not purchasable per token. ovhcloud on Qwen3.8 27B, listed at $0, not purchasable per token. amd on Qwen3.8 27B, listed at $0, not purchasable per token."
     }
   ]
 }
